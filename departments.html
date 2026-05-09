@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Departments - RCCG Wisdom of Parish</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/departments.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/contacts-manager.js"></script>
+    <style>
+        /* Departments Page Specific Styles */
+        .departments-hero {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            padding: 6rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .departments-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .departments-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .departments-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Assistance Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .assistance-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #333;
+            transform: rotate(90deg);
+        }
+
+        .modal-icon {
+            font-size: 3.5rem;
+            color: #8faee8;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .modal-subtitle {
+            font-size: 1rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .assistance-options {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .assistance-btn {
+            padding: 1.2rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .assistance-btn i {
+            font-size: 1.5rem;
+            color: #8faee8;
+            min-width: 30px;
+        }
+
+        .assistance-btn:hover {
+            border-color: #8faee8;
+            background: #f9f9f9;
+            transform: translateX(5px);
+        }
+
+        .assistance-btn.active {
+            border-color: #8faee8;
+            background: #f0f6ff;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .modal-btn {
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(90, 99, 120, 0.3);
+        }
+
+        .modal-btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        /* Departments Grid */
+        .departments-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .departments-navigation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .department-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .department-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #5a6378 0%, #8faee8 100%);
+        }
+
+        .department-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .department-icon {
+            font-size: 3rem;
+            color: #8faee8;
+            margin-bottom: 1rem;
+        }
+
+        .department-name {
+            font-size: 1.4rem;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .department-count {
+            font-size: 0.95rem;
+            color: #999;
+            margin-bottom: 1rem;
+        }
+
+        .department-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .view-dept-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .view-dept-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 99, 120, 0.3);
+        }
+
+        /* Department View */
+        .department-view {
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .department-view.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .department-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .department-header i {
+            font-size: 2.5rem;
+        }
+
+        .department-header-text h2 {
+            font-size: 2rem;
+            margin: 0 0 0.3rem 0;
+        }
+
+        .department-header-text p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            padding: 0.6rem 1.2rem;
+            background: #f0f0f0;
+            color: #5a6378;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .back-button:hover {
+            background: #e8e8e8;
+            border-color: #bbb;
+        }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #5a6378 0%, #8faee8 100%);
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(90, 99, 120, 0.2);
+        }
+
+        .team-name {
+            font-size: 1.3rem;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .team-title {
+            font-size: 1.05rem;
+            color: #8faee8;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .team-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .info-item i {
+            color: #8faee8;
+            min-width: 20px;
+            margin-top: 0.2rem;
+            font-size: 1rem;
+        }
+
+        .info-text {
+            color: #666;
+        }
+
+        .info-text a {
+            color: #8faee8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .info-text a:hover {
+            text-decoration: underline;
+        }
+
+        .office-info {
+            font-size: 0.85rem;
+            color: #999;
+            font-style: italic;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* Admin Controls */
+        .admin-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .admin-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn-edit {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .admin-btn-edit:hover {
+            background: #bbdefb;
+        }
+
+        .admin-btn-delete {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .admin-btn-delete:hover {
+            background: #ffcdd2;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .departments-hero h1 {
+                font-size: 2rem;
+            }
+
+            .departments-navigation {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .department-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .admin-controls {
+                flex-direction: column;
+            }
+
+            .admin-btn {
+                width: 100%;
+            }
+
+            .assistance-modal {
+                padding: 1.5rem;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .modal-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                    <li><a href="ministries.html">Ministries</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="giving.html">Give</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Departments Hero Section -->
+    <section class="departments-hero">
+        <h1><i class="fas fa-sitemap"></i> Our Departments</h1>
+        <p>Explore our church structure and connect with the leadership and team members in each department.</p>
+    </section>
+
+    <!-- Main Container -->
+    <div class="departments-container">
+        <!-- Assistance Modal -->
+        <div class="modal-overlay" id="assistanceModal">
+            <div class="assistance-modal">
+                <button class="modal-close" onclick="closeAssistanceModal()">×</button>
+                
+                <div class="modal-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                
+                <div class="modal-title">Do You Need Any Assistance?</div>
+                <div class="modal-subtitle">We're here to help! Select what you're looking for and we'll connect you with the right person.</div>
+                
+                <div class="assistance-options">
+                    <button class="assistance-btn" onclick="selectAssistance('department', this)">
+                        <i class="fas fa-sitemap"></i>
+                        <span>Browse by Department</span>
+                    </button>
+                    <button class="assistance-btn" onclick="selectAssistance('contact', this)">
+                        <i class="fas fa-phone"></i>
+                        <span>Find a Specific Contact</span>
+                    </button>
+                    <button class="assistance-btn" onclick="selectAssistance('question', this)">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Have a Question</span>
+                    </button>
+                    <button class="assistance-btn" onclick="selectAssistance('visit', this)">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Plan a Visit</span>
+                    </button>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn modal-btn-secondary" onclick="closeAssistanceModal()">Maybe Later</button>
+                    <button class="modal-btn modal-btn-primary" id="assistanceSubmitBtn" onclick="submitAssistance()">Get Help</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Navigation (Grid View) -->
+        <div id="departmentsGrid" class="departments-navigation">
+            <!-- Dynamically populated -->
+        </div>
+
+        <!-- Department Detail Views -->
+        <div id="departmentDetailsContainer">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="./images/Rccg_logo.png" alt="RCCG Wisdom of Parish Logo" />
+                    <h3>RCCG Wisdom of Parish</h3>
+                </div>
+                <p>Building a community of faith, worship, and service in the love of Christ.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermons</a></li>
+                    <li><a href="ministries.html">Ministries</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="giving.html">Giving</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank" title="Facebook" class="social-icon">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </a>
+                    <a href="https://twitter.com" target="_blank" title="Twitter" class="social-icon">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href="https://instagram.com" target="_blank" title="Instagram" class="social-icon">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://youtube.com" target="_blank" title="YouTube" class="social-icon">
+                        <i class="fab fa-youtube"></i> YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Service Times</h4>
+                <ul class="footer-times">
+                    <li><strong>Sunday:</strong> 9:00 AM - 11:30 AM</li>
+                    <li><strong>Tuesday:</strong> 6:00 PM (Digging Deep)</li>
+                    <li><strong>Friday:</strong> 6:00 PM (Faith Clinic)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 RCCG Wisdom of Parish. All rights reserved.</p>
+            <p>Serving in Faith | Growing in Grace | Sharing God's Love</p>
+        </div>
+    </footer>
+
+    <script>
+        let selectedAssistance = 'department';
+
+        // Department descriptions
+        const departmentDescriptions = {
+            leadership: 'Church leadership and pastoral staff responsible for spiritual direction and oversight',
+            ministry: 'Ministry leaders who coordinate and oversee various spiritual activities and programs',
+            finance: 'Finance department handling church giving, budgeting, and financial stewardship',
+            administration: 'Administrative staff providing operational support and coordination',
+            support: 'Support services including counseling and pastoral care'
+        };
+
+        // Department icons
+        const departmentIcons = {
+            leadership: 'fas fa-crown',
+            ministry: 'fas fa-hands-praying',
+            finance: 'fas fa-wallet',
+            administration: 'fas fa-clipboard',
+            support: 'fas fa-heart'
+        };
+
+        // Assistance Modal Functions
+        function selectAssistance(type, element) {
+            selectedAssistance = type;
+            document.querySelectorAll('.assistance-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function closeAssistanceModal() {
+            document.getElementById('assistanceModal').classList.remove('show');
+        }
+
+        function submitAssistance() {
+            const assistanceActions = {
+                department: function() {
+                    closeAssistanceModal();
+                    alert('Browse the departments below to find the right team member!');
+                },
+                contact: function() {
+                    closeAssistanceModal();
+                    alert('Browse the departments below to find specific contacts. You can also visit our main Contact page for more details.');
+                },
+                question: function() {
+                    closeAssistanceModal();
+                    const email = 'info@wisdomchurch.org';
+                    const phone = '+234 (0) 701 234 5678';
+                    alert(`Send your question to: ${email}\nOr call: ${phone}\n\nYou can also find specific department contacts below.`);
+                },
+                visit: function() {
+                    closeAssistanceModal();
+                    alert('Visit our church at: Plot 123, Mobil Road, Lekki Phase 1, Lagos\n\nService Times:\nSunday: 9:00 AM - 11:30 AM\nTuesday: 6:00 PM (Digging Deep)\nFriday: 6:00 PM (Faith Clinic)\n\nContact us for more information!');
+                }
+            };
+
+            if (assistanceActions[selectedAssistance]) {
+                assistanceActions[selectedAssistance]();
+            }
+        }
+
+        // Render department grid
+        function renderDepartmentGrid() {
+            const departments = ContactsManager.getDepartments();
+            const grid = document.getElementById('departmentsGrid');
+
+            let html = '';
+            departments.forEach(dept => {
+                const contacts = ContactsManager.getByDepartment(dept);
+                const label = ContactsManager.getDepartmentLabel(dept);
+                const icon = departmentIcons[dept];
+
+                html += `
+                    <div class="department-card" onclick="viewDepartment('${dept}')">
+                        <i class="${icon} department-icon"></i>
+                        <div class="department-name">${label}</div>
+                        <div class="department-count">${contacts.length} Team Member${contacts.length !== 1 ? 's' : ''}</div>
+                        <div class="department-description">${departmentDescriptions[dept]}</div>
+                        <button class="view-dept-btn">View Team</button>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // Render department detail view
+        function renderDepartmentDetails() {
+            const departments = ContactsManager.getDepartments();
+            const container = document.getElementById('departmentDetailsContainer');
+
+            let html = '';
+            departments.forEach(dept => {
+                const contacts = ContactsManager.getByDepartment(dept);
+                const label = ContactsManager.getDepartmentLabel(dept);
+                const icon = departmentIcons[dept];
+
+                html += `
+                    <div class="department-view" id="view-${dept}">
+                        <button class="back-button" onclick="closeView('${dept}')">
+                            <i class="fas fa-arrow-left"></i> Back to Departments
+                        </button>
+
+                        <div class="department-header">
+                            <i class="${icon}"></i>
+                            <div class="department-header-text">
+                                <h2>${label}</h2>
+                                <p>${contacts.length} team member${contacts.length !== 1 ? 's' : ''}</p>
+                            </div>
+                        </div>
+
+                        <div class="team-grid">
+                            ${contacts.map(contact => `
+                                <div class="team-card">
+                                    <div class="team-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="team-name">${contact.name}</div>
+                                    <div class="team-title">${contact.title}</div>
+                                    
+                                    <div class="team-info">
+                                        ${contact.phone ? `
+                                        <div class="info-item">
+                                            <i class="fas fa-phone"></i>
+                                            <div class="info-text">
+                                                <a href="tel:${contact.phone}">${contact.phone}</a>
+                                            </div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${contact.email ? `
+                                        <div class="info-item">
+                                            <i class="fas fa-envelope"></i>
+                                            <div class="info-text">
+                                                <a href="mailto:${contact.email}">${contact.email}</a>
+                                            </div>
+                                        </div>
+                                        ` : ''}
+                                        
+                                        ${contact.office_location ? `
+                                        <div class="info-item">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <div class="info-text">${contact.office_location}</div>
+                                        </div>
+                                        ` : ''}
+                                    </div>
+                                    
+                                    ${contact.office_hours ? `
+                                    <div class="office-info">
+                                        <i class="fas fa-clock"></i> ${contact.office_hours}
+                                    </div>
+                                    ` : ''}
+
+                                    <div class="admin-controls" id="admin-${contact.id}" style="display: none;">
+                                        <button class="admin-btn admin-btn-edit" onclick="editContact(${contact.id})">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="admin-btn admin-btn-delete" onclick="deleteContact(${contact.id}, '${contact.name}')">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // View department
+        function viewDepartment(dept) {
+            document.getElementById('departmentsGrid').style.display = 'none';
+            document.getElementById('view-' + dept).classList.add('active');
+        }
+
+        // Close view
+        function closeView(dept) {
+            document.getElementById('departmentsGrid').style.display = 'grid';
+            document.getElementById('view-' + dept).classList.remove('active');
+        }
+
+        // Edit contact (redirects to admin)
+        function editContact(id) {
+            alert('Redirecting to admin panel to edit contact. Please visit contacts-admin.html');
+            window.open('contacts-admin.html', '_blank');
+        }
+
+        // Delete contact
+        function deleteContact(id, name) {
+            if (confirm(`Delete "${name}"? This cannot be undone.`)) {
+                ContactsManager.delete(id);
+                alert(`Contact "${name}" deleted successfully!`);
+                renderDepartmentGrid();
+                renderDepartmentDetails();
+            }
+        }
+
+        // Admin mode toggle
+        function toggleAdminControls() {
+            const password = prompt('Enter admin password:');
+            if (password === ContactsManager.DEFAULT_ADMIN_PASSWORD) {
+                const adminControls = document.querySelectorAll('.admin-controls');
+                adminControls.forEach(control => {
+                    control.style.display = control.style.display === 'none' ? 'flex' : 'none';
+                });
+                alert('Admin mode: ' + (adminControls[0].style.display === 'flex' ? 'ON' : 'OFF'));
+            } else if (password !== null) {
+                alert('Incorrect password');
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderDepartmentGrid();
+            renderDepartmentDetails();
+            
+            // Show assistance modal on page load
+            setTimeout(() => {
+                document.getElementById('assistanceModal').classList.add('show');
+            }, 500);
+
+            // Add keyboard shortcut for admin (Ctrl+Shift+A)
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    toggleAdminControls();
+                }
+            });
+        });
+    </script>
+
+    <!-- External JavaScript Files -->
+    <script src="js/global.js"></script>
+</body>
+</html>

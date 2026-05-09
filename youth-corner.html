@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youth Corner - Magazine</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/magazine.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Magazine Shared Styles */
+        .magazine-hero {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .magazine-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .magazine-hero p {
+            font-size: 1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Magazine Controls */
+        .magazine-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: white;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-magazine {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-magazine input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-magazine input:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        .filter-date select {
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-date select:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        /* Article Grid */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Article Card */
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-image i {
+            opacity: 0.8;
+        }
+
+        .article-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: #8faee8;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .article-author {
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .article-card h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .article-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #8faee8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 0.8rem;
+            color: #5a6378;
+        }
+
+        /* Article Modal */
+        .article-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .article-modal.show {
+            display: flex;
+        }
+
+        .modal-article-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-article {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-article:hover {
+            color: #333;
+        }
+
+        .modal-article-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-article-header h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .modal-article-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .modal-meta-item i {
+            color: #8faee8;
+            font-size: 1.1rem;
+        }
+
+        .modal-article-body {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .modal-article-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Featured Article */
+        .featured-article {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 1000px;
+        }
+
+        .featured-article-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .featured-article-image {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+        }
+
+        .featured-article-content {
+            padding: 2rem;
+        }
+
+        .featured-label {
+            color: #8faee8;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .featured-article-content h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .featured-article-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .featured-article-content p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .magazine-hero h1 {
+                font-size: 2rem;
+            }
+
+            .article-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-article-wrapper {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-article-content {
+                padding: 1.5rem;
+            }
+
+            .featured-article-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .magazine-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-magazine,
+            .filter-date {
+                width: 100%;
+            }
+
+            .modal-article-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                     <li><a href="#">Ministries</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#giving">Give</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Magazine Hero -->
+    <section class="magazine-hero">
+        <h1><i class="fas fa-fire"></i> Youth Corner Magazine</h1>
+        <p>Empowering young Christians to live purposeful lives and make a difference</p>
+    </section>
+
+    <!-- Featured Article -->
+    <section class="container">
+        <div class="featured-article">
+            <div class="featured-article-wrapper">
+                <div class="featured-article-image">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="featured-article-content">
+                    <div class="featured-label">Featured This Month</div>
+                    <h2>Finding Your Purpose as a Young Christian</h2>
+                    <div class="featured-article-meta">
+                        <span class="modal-meta-item">
+                            <i class="fas fa-calendar"></i> March 18, 2025
+                        </span>
+                        <span class="modal-meta-item">
+                            <i class="fas fa-user"></i> Pastor Timothy Okoye
+                        </span>
+                    </div>
+                    <p>Discover how to navigate your teen and young adult years with purpose, faith, and passion for God's calling on your life.</p>
+                    <a href="#" class="read-more" onclick="openArticle(0)">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Magazine Controls -->
+    <div class="magazine-controls">
+        <div class="search-magazine">
+            <input type="text" id="searchArticles" placeholder="Search articles by title...">
+        </div>
+        <div class="filter-date">
+            <select id="filterMonth">
+                <option value="">All Articles</option>
+                <option value="2025-03">March 2025</option>
+                <option value="2025-02">February 2025</option>
+                <option value="2025-01">January 2025</option>
+                <option value="2024-12">December 2024</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Article Grid -->
+    <div class="article-grid" id="articleGrid"></div>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="article-modal">
+        <div class="modal-article-content">
+            <span class="close-article" onclick="closeArticle()">&times;</span>
+            <div class="modal-article-header">
+                <h2 id="modalTitle"></h2>
+                <div class="modal-article-meta">
+                    <span class="modal-meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span id="modalDate"></span>
+                    </span>
+                    <span class="modal-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span id="modalAuthor"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-article-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: #5a6378; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <p>&copy; 2025 RCCG Wisdom of Parish. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample Articles Data - DEVELOPER: Add/Edit articles here with dates
+        const articlesData = [
+            {
+                id: 0,
+                title: "Finding Your Purpose as a Young Christian",
+                author: "Pastor Timothy Okoye",
+                date: "2025-03-18",
+                description: "Discover how to navigate your teen and young adult years with purpose and faith.",
+                content: "As a young Christian, you probably feel the pressure to figure out your life. What should you study? What career should you pursue? Who should you marry? These are big questions, and it's normal to feel overwhelmed.\n\nBut here's the good news: God has a plan for you. Jeremiah 29:11 says, 'For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.'\n\nFinding your purpose isn't about following a predetermined map. It's about developing a relationship with God and discovering His will as you grow and make decisions. Some key principles:\n\n1. Spend time in prayer and Bible study. This is how you connect with God and understand His values.\n\n2. Seek wise counsel from mentors and trusted adults who share your faith.\n\n3. Use your talents and gifts to serve others. This often reveals what passionate about.\n\n4. Don't rush. God's timeline might be different from yours, and that's okay.\n\n5. Take action. Purpose isn't passive. As you use your gifts and explore opportunities, you'll discover your path.\n\nRemember, your purpose at this stage of life may be different from your purpose at another stage. That's perfectly fine. Be faithful with what God has given you right now.",
+                icon: "fas fa-star"
+            },
+            {
+                id: 1,
+                title: "Navigating Peer Pressure with Godly Principles",
+                author: "Sister Folake Adeyemi",
+                date: "2025-03-10",
+                description: "Learn how to stand firm in your faith when faced with temptation and peer pressure.",
+                content: "Peer pressure is one of the biggest challenges young people face. Whether it's pressure to engage in harmful activities, compromise your values, or fit into certain groups, it can feel overwhelming.\n\nBut you're not alone in this struggle. 1 Corinthians 10:13 reminds us that 'no temptation has overtaken you except what is common to mankind. And God is faithful; he will not let you be tempted beyond what you can bear.'\n\nHere are practical ways to handle peer pressure:\n\n1. Know your values. Before you're in a difficult situation, decide what you stand for based on your faith.\n\n2. Find a good friend group. Surround yourself with people who share your values and will support you in making good choices.\n\n3. Have a plan. Know how you'll respond if offered something that goes against your values.\n\n4. Use the STOP method: Stop, Think, Options, Pick a choice. When faced with pressure, use this simple framework.\n\n5. Talk to someone. Whether it's a parent, youth pastor, or trusted adult, don't try to handle everything alone.\n\n6. Remember your \"why.\" Why do you follow Christ? Keep that reason clear in your mind.\n\nResisting peer pressure is an act of self-respect and faith. You're stronger than you think.",
+                icon: "fas fa-hand-fist"
+            },
+            {
+                id: 2,
+                title: "Building Strong Friendships That Matter",
+                author: "Brother David Chisom",
+                date: "2025-02-25",
+                description: "How to cultivate meaningful friendships that build your faith and character.",
+                content: "Friendships are crucial during your young years. They shape your values, influence your decisions, and provide support through life's challenges.\n\nProverbs 27:12 says, 'As iron sharpens iron, so one person sharpens another.' This is the essence of true friendship. We're meant to help each other grow.\n\nWhat makes a strong friendship?\n\n1. Shared values. When you and your friends share core values, especially faith, you can support each other in living those values.\n\n2. Honesty. Real friends tell you the truth, even when it's hard to hear. They're not afraid to lovingly correct you.\n\n3. Intentionality. Strong friendships take time and effort. Make time for your friends and show up for them.\n\n4. Loyalty. True friends stick with you through good times and bad.\n\n5. Growth-oriented. Friends who make you want to be better, who challenge you to grow spiritually and as a person.\n\nAs you build friendships, be the kind of friend you want to have. Be loyal, honest, and supportive. Invest in people who share your faith and values. These friendships will sustain you through life.",
+                icon: "fas fa-handshake"
+            },
+            {
+                id: 3,
+                title: "Understanding Relationships God's Way",
+                author: "Pastor Adekunle & Sister Grace",
+                date: "2025-02-12",
+                description: "Biblical principles for dating and relationships as young Christians.",
+                content: "Relationships are an important part of being young, but navigating them wisely is crucial. Proverbs 4:23 says, 'Guard your heart above all else, for it determines the course of your life.'\n\nThis doesn't mean relationships are bad. It means being intentional and wise about them.\n\nKey principles:\n\n1. Seek God first. Your primary relationship should be with God. Other relationships flow from this foundation.\n\n2. Shared faith matters. Being unequally yoked (2 Corinthians 6:14) means more than just dating someone of different religion. It means finding someone who shares your core values and spiritual commitment.\n\n3. Purity matters. Saving physical intimacy for marriage isn't outdated. It's protective and honoring to God.\n\n4. Communicate openly. Talk about important things like faith, future plans, values, and expectations.\n\n5. Get wisdom from others. Don't try to navigate relationships in isolation. Seek counsel from trusted mentors.\n\n6. If something doesn't feel right, trust that feeling. God often warns us through our intuition.\n\nRemember, the goal of dating should be finding a life partner, not just entertainment or passing time. Be intentional, be wise, and honor God in your relationships.",
+                icon: "fas fa-heart"
+            },
+            {
+                id: 4,
+                title: "Using Your Talents to Serve Others",
+                author: "Brother Michael Obi",
+                date: "2025-01-30",
+                description: "Discover how to use your unique gifts to make a positive impact in your community.",
+                content: "Every person has unique talents and abilities. These aren't accidents or meant to be buried. They're meant to be used to serve others and glorify God.\n\n1 Peter 4:10-11 says, 'Each of you should use whatever gift you have received to serve others, as faithful stewards of God's grace in its various forms.'\n\nHow to discover and use your talents:\n\n1. Identify your gifts. What comes naturally to you? What makes you lose track of time because you're so engaged? What do others say you're good at?\n\n2. Develop your talents. Once you've identified them, invest in improving. Take classes, practice, volunteer your skills.\n\n3. Look for opportunities to serve. Your church, community, and the world need your talents. Whether you're good at music, art, teaching, organizing, or any number of things, someone needs what you can offer.\n\n4. Use your talents strategically. Think about how your unique gifts can address needs in your community.\n\n5. Keep improving. Your talents can continue to develop throughout your life.\n\nusing your talents isn't just about doing good works. It's about expressing your gratitude to God and fulfilling your purpose. Don't minimize what you can do. Start where you are and let your contributions grow from there.",
+                icon: "fas fa-gift"
+            },
+            {
+                id: 5,
+                title: "Mental Health and Faith: Finding Balance",
+                author: "Counselor Chioma Eze",
+                date: "2025-01-15",
+                description: "Addressing mental health challenges and understanding how faith and professional help can work together.",
+                content: "Mental health is just as important as physical health, and young people experience unique challenges in this area. Anxiety, depression, and stress are common but often go unspoken in religious communities.\n\nBut here's an important truth: having mental health challenges doesn't mean your faith is weak. In fact, seeking help is an act of faith—trusting God to use professionals and resources to support your healing.\n\nBiblical perspective:\n\n1. Jesus himself experienced human emotions including sadness and distress. Mental challenges are not a sign of spiritual failure.\n\n2. Seeking professional help is wise stewardship of your mental health. Proverbs 15:22 says 'Plans fail for lack of counsel, but with many advisers they succeed.'\n\n3. Prayer and therapy aren't mutually exclusive. Both can be part of your healing journey.\n\nPractical steps:\n\n1. Recognize signs that you need help: persistent sadness, anxiety, difficulty functioning, harmful thoughts.\n\n2. Reach out. Talk to a parent, school counselor, youth pastor, or mental health professional.\n\n3. Be patient with yourself. Healing takes time.\n\n4. Practice self-care: sleep, exercise, healthy eating, spending time in nature.\n\n5. Stay connected to your faith community while also getting professional support.\n\nYour mental health matters. You matter. Don't suffer in silence.",
+                icon: "fas fa-brain"
+            }
+        ];
+
+        // Render Articles
+        function renderArticles(articles) {
+            const grid = document.getElementById('articleGrid');
+            
+            if (articles.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="fas fa-inbox"></i><p>No articles found</p></div>';
+                return;
+            }
+
+            grid.innerHTML = articles.map((article, index) => `
+                <div class="article-card" data-date="${article.date}">
+                    <div class="article-image">
+                        <i class="${article.icon}"></i>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${formatDate(article.date)}
+                            </span>
+                        </div>
+                        <h3>${article.title}</h3>
+                        <div class="article-author">
+                            <i class="fas fa-user-circle"></i>
+                            ${article.author}
+                        </div>
+                        <p class="article-description">${article.description}</p>
+                        <a href="#" class="read-more" onclick="openArticle(${article.id})">
+                            Read Full Article <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Format Date
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateStr).toLocaleDateString('en-US', options);
+        }
+
+        // Open Article Modal
+        function openArticle(id) {
+            const article = articlesData[id];
+            document.getElementById('modalTitle').textContent = article.title;
+            document.getElementById('modalDate').textContent = formatDate(article.date);
+            document.getElementById('modalAuthor').textContent = article.author;
+            document.getElementById('modalBody').innerHTML = article.content.split('\n').map(p => `<p>${p}</p>`).join('');
+            document.getElementById('articleModal').classList.add('show');
+        }
+
+        // Close Article Modal
+        function closeArticle() {
+            document.getElementById('articleModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('articleModal');
+            if (event.target == modal) {
+                closeArticle();
+            }
+        }
+
+        // Search Articles
+        document.getElementById('searchArticles').addEventListener('keyup', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const month = document.getElementById('filterMonth').value;
+            
+            let filtered = articlesData.filter(article => {
+                const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                                     article.author.toLowerCase().includes(searchTerm);
+                const matchesMonth = !month || article.date.startsWith(month);
+                return matchesSearch && matchesMonth;
+            });
+            
+            renderArticles(filtered);
+        });
+
+        // Filter by Date
+        document.getElementById('filterMonth').addEventListener('change', function(e) {
+            const month = e.target.value;
+            const searchTerm = document.getElementById('searchArticles').value.toLowerCase();
+            
+            let filtered = articlesData.filter(article => {
+                const matchesMonth = !month || article.date.startsWith(month);
+                const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                                     article.author.toLowerCase().includes(searchTerm);
+                return matchesMonth && matchesSearch;
+            });
+            
+            renderArticles(filtered);
+        });
+
+        // Initialize - render all articles from magazine manager
+        const articles = magazineManager.getArticles('youth-corner');
+        renderArticles(articles);
+    </script>
+
+    <!-- Admin Link -->
+    <a href="magazine-admin.html" class="admin-link" title="Manage Articles">
+        <i class="fas fa-cog"></i>
+    </a>
+
+    <style>
+        .admin-link {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #5a6378;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .admin-link:hover {
+            background: #8faee8;
+            transform: scale(1.1);
+        }
+        @media (max-width: 768px) {
+            .admin-link {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+
+    <!-- External JavaScript Files -->
+    <script src="js/magazine-admin.js"></script>
+    <script src="js/global.js"></script>
+</body>
+</html>

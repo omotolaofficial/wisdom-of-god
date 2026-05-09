@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spirituality - Magazine</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/magazine.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Magazine Shared Styles */
+        .magazine-hero {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .magazine-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .magazine-hero p {
+            font-size: 1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Magazine Controls */
+        .magazine-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: white;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-magazine {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-magazine input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-magazine input:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        .filter-date select {
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-date select:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        /* Article Grid */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Article Card */
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-image i {
+            opacity: 0.8;
+        }
+
+        .article-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: #8faee8;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .article-author {
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .article-card h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .article-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #8faee8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 0.8rem;
+            color: #5a6378;
+        }
+
+        /* Article Modal */
+        .article-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .article-modal.show {
+            display: flex;
+        }
+
+        .modal-article-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-article {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-article:hover {
+            color: #333;
+        }
+
+        .modal-article-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-article-header h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .modal-article-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .modal-meta-item i {
+            color: #8faee8;
+            font-size: 1.1rem;
+        }
+
+        .modal-article-body {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .modal-article-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Featured Article */
+        .featured-article {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 1000px;
+        }
+
+        .featured-article-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .featured-article-image {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+        }
+
+        .featured-article-content {
+            padding: 2rem;
+        }
+
+        .featured-label {
+            color: #8faee8;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .featured-article-content h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .featured-article-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .featured-article-content p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .magazine-hero h1 {
+                font-size: 2rem;
+            }
+
+            .article-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-article-wrapper {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-article-content {
+                padding: 1.5rem;
+            }
+
+            .featured-article-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .magazine-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-magazine,
+            .filter-date {
+                width: 100%;
+            }
+
+            .modal-article-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                     <li><a href="#">Ministries</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#giving">Give</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Magazine Hero -->
+    <section class="magazine-hero">
+        <h1><i class="fas fa-hands-praying"></i> Spirituality Magazine</h1>
+        <p>Deepen your faith and explore the spiritual dimensions of Christian life</p>
+    </section>
+
+    <!-- Featured Article -->
+    <section class="container">
+        <div class="featured-article">
+            <div class="featured-article-wrapper">
+                <div class="featured-article-image">
+                    <i class="fas fa-spiral"></i>
+                </div>
+                <div class="featured-article-content">
+                    <div class="featured-label">Featured This Month</div>
+                    <h2>The Transformative Power of Prayer</h2>
+                    <div class="featured-article-meta">
+                        <span class="modal-meta-item">
+                            <i class="fas fa-calendar"></i> March 22, 2025
+                        </span>
+                        <span class="modal-meta-item">
+                            <i class="fas fa-user"></i> Bishop John Okonkwo
+                        </span>
+                    </div>
+                    <p>Discover how prayer shapes our spirits, transforms our thinking, and deepens our relationship with God.</p>
+                    <a href="#" class="read-more" onclick="openArticle(0)">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Magazine Controls -->
+    <div class="magazine-controls">
+        <div class="search-magazine">
+            <input type="text" id="searchArticles" placeholder="Search articles by title...">
+        </div>
+        <div class="filter-date">
+            <select id="filterMonth">
+                <option value="">All Articles</option>
+                <option value="2025-03">March 2025</option>
+                <option value="2025-02">February 2025</option>
+                <option value="2025-01">January 2025</option>
+                <option value="2024-12">December 2024</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Article Grid -->
+    <div class="article-grid" id="articleGrid"></div>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="article-modal">
+        <div class="modal-article-content">
+            <span class="close-article" onclick="closeArticle()">&times;</span>
+            <div class="modal-article-header">
+                <h2 id="modalTitle"></h2>
+                <div class="modal-article-meta">
+                    <span class="modal-meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span id="modalDate"></span>
+                    </span>
+                    <span class="modal-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span id="modalAuthor"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-article-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: #5a6378; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <p>&copy; 2025 RCCG Wisdom of Parish. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample Articles Data - DEVELOPER: Add/Edit articles here with dates
+        const articlesData = [
+            {
+                id: 0,
+                title: "The Transformative Power of Prayer",
+                author: "Bishop John Okonkwo",
+                date: "2025-03-22",
+                description: "Discover how prayer shapes our spirits and deepens our relationship with God.",
+                content: "Prayer is one of the most powerful tools available to us as Christians. Yet many of us struggle with it. We don't always know what to say, or we get distracted, or we wonder if God is really listening.\n\nBut prayer is transformative. It changes us, aligns our hearts with God's heart, and opens the door to miracles.\n\nWhat is prayer?\n\nPrayer is simply communication with God. It's not about using fancy words or long speeches. It's about honest conversation with your Creator.\n\nWhy prayer matters:\n\n1. Prayer connects us to God. In prayer, we acknowledge God's presence and our dependence on Him.\n\n2. Prayer aligns our will with God's will. As we pray, we move from wanting what we want to wanting what God wants.\n\n3. Prayer transforms our perspective. When we bring our problems to God, He reshapes how we see them.\n\n4. Prayer releases God's power in our lives. Throughout Scripture, we see prayer preceding miracles.\n\nHow to pray:\n\n1. Find a quiet place where you can focus.\n\n2. Be honest. Tell God what you're feeling, even if it's anger, doubt, or confusion.\n\n3. Listen. Prayer isn't just talking; it's also listening for God's voice.\n\n4. Pray with faith. Believe that God hears you and cares about your concerns.\n\n5. Pray consistently. Make prayer a habit, not just a last resort.\n\nAs you commit to prayer, you'll experience transformation. Your faith will deepen, your peace will increase, and you'll recognize God's hand in your life.",
+                icon: "fas fa-spiral"
+            },
+            {
+                id: 1,
+                title: "Understanding God's Love Through Scripture",
+                author: "Pastor Grace Samuel",
+                date: "2025-03-10",
+                description: "Exploring what the Bible teaches us about God's love and what it means for us.",
+                content: "One of the most beautiful truths in Christianity is that God loves us. Not conditionally, not partially, but completely and unconditionally.\n\nRomans 8:37-39 says, 'In all these things we are more than conquerors through him who loved us. For I am convinced that neither death nor life, neither angels nor demons, neither the present nor the future, nor any powers, neither height nor depth, nor anything else in all creation, will be able to separate us from the love of God that is in Christ Jesus our Lord.'\n\nLet that sink in. Nothing can separate us from God's love.\n\nWhat does God's love mean?\n\n1. You are valuable. God doesn't love you because you're useful or productive. You have intrinsic value simply because you exist.\n\n2. You are forgiven. No matter what you've done, God's love offers forgiveness through Christ. Your past doesn't define your future.\n\n3. You are known. God knows every part of you—your thoughts, your heart, your dreams, your struggles. And He loves you anyway.\n\n4. You are protected. God's love provides security and protection. We don't need to fear the future.\n\n5. You are called to love others. God's love for us should overflow into love for others. As we experience God's love, we share it with others.\n\nWhen we truly grasp God's love for us, it transforms everything. Our insecurity melts away. Our worth is no longer dependent on others' opinions. We can face challenges with confidence knowing that God is for us.\n\nToday, take time to reflect on how much God loves you. Read passages about God's love. Pray. Let this love transform your heart.",
+                icon: "fas fa-heart"
+            },
+            {
+                id: 2,
+                title: "Living out the Fruit of the Spirit",
+                author: "Reverend Adekunle Adeyemi",
+                date: "2025-02-25",
+                description: "How to cultivate love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, and self-control.",
+                content: "Galatians 5:22-23 lists what the Bible calls the \"fruit of the Spirit\": love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, and self-control.\n\nThese aren't just nice qualities. They're evidence that the Holy Spirit is working in and through us.\n\nWhat does each fruit mean?\n\n1. Love - Agape love, self-giving love, the kind of love God has for us.\n\n2. Joy - Not happiness, which depends on circumstances, but deep joy that comes from knowing God.\n\n3. Peace - Inner peace despite external circumstances.\n\n4. Patience - The ability to endure difficult situations without losing your temper or faith.\n\n5. Kindness - Genuine care and compassion for others.\n\n6. Goodness - Doing what's right even when it's difficult.\n\n7. Faithfulness - Being reliable and true to your commitments.\n\n8. Gentleness - Strength under control; being gentle without being weak.\n\n9. Self-control - Discipline over your thoughts, words, and actions.\n\nHow to cultivate the fruit of the Spirit:\n\n1. Spend time in God's presence. Prayer, Bible study, and worship nourish your spirit.\n\n2. Ask the Spirit to work in you. Acknowledge that you can't produce these fruits on your own.\n\n3. Practice these qualities. Like physical fruit, spiritual fruit grows through practice.\n\n4. Surround yourself with others who are also growing spiritually.\n\n5. Be patient with yourself. Growth is a process.\n\nAs you allow the Spirit to work in you, you'll increasingly reflect these fruits. Others will notice. Your presence will become a reflection of God's character in the world.",
+                icon: "fas fa-apple-alt"
+            },
+            {
+                id: 3,
+                title: "Knowing God's Will for Your Life",
+                author: "Bishop Michael Obi",
+                date: "2025-02-12",
+                description: "Biblical principles for discerning and following God's direction for your life.",
+                content: "One of the deepest desires we have as Christians is to know and follow God's will. But how do we discern God's will amidst all the decisions and options we face?\n\nGod does have a will. He's not random or indifferent. He cares about the direction of your life. But knowing His will requires paying attention and developing spiritual sensitivity.\n\nBiblical principles for discerning God's will:\n\n1. Study Scripture. God's will is never contrary to His word. As you read and study the Bible, you understand God's values and direction.\n\n2. Pray. Ask God for guidance. James 1:5 says, 'If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault, and it will be given to you.'\n\n3. Seek wise counsel. Talk to people you trust who know God and know you. Their perspective can be invaluable.\n\n4. Pay attention to your circumstances. Where are doors opening? Where are they closing? God often directs through circumstances.\n\n5. Notice your desires and passions. God often aligns His will with the desires He's placed in your heart.\n\n6. Look for confirmation. God often confirms His will through multiple sources—Scripture, prayer, circumstances, and others' counsel.\n\n7. Exercise faith. Once you've discerned God's direction, step forward in faith even if it's uncertain.\n\n8. Be willing to wait. Sometimes God's timing isn't our timing. Wait patiently for God's direction.\n\nRemember, God's will is always for your good. He knows what will bring you fulfillment, blessing, and growth. Trust Him, and follow His lead.",
+                icon: "fas fa-compass"
+            },
+            {
+                id: 4,
+                title: "The Journey of Spiritual Maturity",
+                author: "Sister Chioma Okafor",
+                date: "2025-01-28",
+                description: "Understanding the stages of spiritual growth and how to progress in your faith.",
+                content: "Just as we grow physically and intellectually, we also grow spiritually. Spiritual maturity isn't something we achieve and are done with; it's a lifelong journey.\n\nThe Bible describes spiritual growth in various ways. Ephesians 4:13 speaks of being 'mature and full grown' in Christ. 2 Peter 1:5-8 encourages us to add to our faith virtue, knowledge, self-control, perseverance, and more.\n\nStages of spiritual growth:\n\n1. Spiritual Infancy - You've recently come to faith. You're learning the basics of what it means to follow Jesus. You need regular nourishment from God's word and Christian community.\n\n2. Spiritual Childhood - You're growing in your understanding of faith and beginning to apply it to your life. You're still somewhat dependent on teachers and spiritual leaders.\n\n3. Spiritual Maturity - You have a solid foundation in Scripture and your faith has become personal. You can handle challenges and help others in their faith.\n\n4. Spiritual Leadership - You're helping others grow. You have wisdom from your own spiritual journey that you're sharing with others.\n\nHow to grow spiritually:\n\n1. Consume God's word regularly. Daily Bible reading and study are essential.\n\n2. Pray consistently. Develop a prayer habit that's part of your daily life.\n\n3. Participate in Christian community. Connect with other believers for encouragement, accountability, and fellowship.\n\n4. Serve others. Ministry and service develop your character and expand your faith.\n\n5. Be willing to change. Spiritual growth means letting go of old ways and embracing new understanding.\n\n6. Reflect on your experiences. How is God working in your life? What are you learning?\n\nYour spiritual journey is unique. Don't compare yourself to others. Focus on growing in your own relationship with God. Each day, take one step closer to Jesus.",
+                icon: "fas fa-mountain"
+            },
+            {
+                id: 5,
+                title: "Cultivating a Lifestyle of Worship",
+                author: "Pastor Timothy Okoye",
+                date: "2025-01-15",
+                description: "Making worship more than a Sunday activity—integrating it into your daily life.",
+                content: "Many of us think of worship as something we do on Sundays. We sing songs, pray, listen to sermons. But true worship is far more than that. It's a lifestyle.\n\nRomans 12:1 says, 'Therefore, I urge you, brothers and sisters, in view of God's mercy, to offer your bodies as a living sacrifice, holy and pleasing to God—this is your true and proper worship.'\n\nThis means that everything we do—how we work, how we treat others, how we spend our money, how we spend our time—can be an act of worship.\n\nWhat does lifestyle worship look like?\n\n1. Gratitude. Throughout your day, notice things you're grateful for and thank God for them.\n\n2. Service. When you serve others, you're worshiping God. Colossians 3:23-24 says to do everything 'for the Lord, not for human masters, since you know that you will receive an inheritance from the Lord as a reward. It is the Lord Christ you are serving.'\n\n3. Honesty. Living with integrity is a form of worship.\n\n4. Generosity. How you use your resources is an expression of worship.\n\n5. Obedience. Following God's commands, even when it's hard, is worship.\n\n6. Joy. Celebrating life, laughing, enjoying creation—these can all be acts of worship.\n\n7. Vulnerability. Being real with God and others, admitting your struggles, is worship.\n\nWhen you view your entire life as worship, everything becomes sacred. You're no longer compartmentalizing your life into \"religious\" and \"secular.\" Everything is surrender to God.\n\nToday, whatever you do, do it as an act of worship. Whether you're working, cleaning, spending time with family, or relaxing—do it for God. This perspective will transform your daily experience.",
+                icon: "fas fa-hands-praying"
+            }
+        ];
+
+        // Render Articles
+        function renderArticles(articles) {
+            const grid = document.getElementById('articleGrid');
+            
+            if (articles.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="fas fa-inbox"></i><p>No articles found</p></div>';
+                return;
+            }
+
+            grid.innerHTML = articles.map((article, index) => `
+                <div class="article-card" data-date="${article.date}">
+                    <div class="article-image">
+                        <i class="${article.icon}"></i>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${formatDate(article.date)}
+                            </span>
+                        </div>
+                        <h3>${article.title}</h3>
+                        <div class="article-author">
+                            <i class="fas fa-user-circle"></i>
+                            ${article.author}
+                        </div>
+                        <p class="article-description">${article.description}</p>
+                        <a href="#" class="read-more" onclick="openArticle(${article.id})">
+                            Read Full Article <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Format Date
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateStr).toLocaleDateString('en-US', options);
+        }
+
+        // Open Article Modal
+        function openArticle(id) {
+            const article = articlesData[id];
+            document.getElementById('modalTitle').textContent = article.title;
+            document.getElementById('modalDate').textContent = formatDate(article.date);
+            document.getElementById('modalAuthor').textContent = article.author;
+            document.getElementById('modalBody').innerHTML = article.content.split('\n').map(p => `<p>${p}</p>`).join('');
+            document.getElementById('articleModal').classList.add('show');
+        }
+
+        // Close Article Modal
+        function closeArticle() {
+            document.getElementById('articleModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('articleModal');
+            if (event.target == modal) {
+                closeArticle();
+            }
+        }
+
+        // Search Articles
+        document.getElementById('searchArticles').addEventListener('keyup', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const month = document.getElementById('filterMonth').value;
+            
+            let filtered = articlesData.filter(article => {
+                const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                                     article.author.toLowerCase().includes(searchTerm);
+                const matchesMonth = !month || article.date.startsWith(month);
+                return matchesSearch && matchesMonth;
+            });
+            
+            renderArticles(filtered);
+        });
+
+        // Filter by Date
+        document.getElementById('filterMonth').addEventListener('change', function(e) {
+            const month = e.target.value;
+            const searchTerm = document.getElementById('searchArticles').value.toLowerCase();
+            
+            let filtered = articlesData.filter(article => {
+                const matchesMonth = !month || article.date.startsWith(month);
+                const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                                     article.author.toLowerCase().includes(searchTerm);
+                return matchesMonth && matchesSearch;
+            });
+            
+            renderArticles(filtered);
+        });
+
+        // Initialize - render all articles from magazine manager
+        const articles = magazineManager.getArticles('spirituality');
+        renderArticles(articles);
+    </script>
+
+    <!-- Admin Link -->
+    <a href="magazine-admin.html" class="admin-link" title="Manage Articles">
+        <i class="fas fa-cog"></i>
+    </a>
+
+    <style>
+        .admin-link {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #5a6378;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .admin-link:hover {
+            background: #8faee8;
+            transform: scale(1.1);
+        }
+        @media (max-width: 768px) {
+            .admin-link {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+
+    <!-- External JavaScript Files -->
+    <script src="js/magazine-admin.js"></script>
+    <script src="js/global.js"></script>
+</body>
+</html>

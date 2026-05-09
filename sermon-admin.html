@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sermon Admin Panel - RCCG Wisdom of Parish</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Admin Panel Specific Styles */
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .admin-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .admin-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* Form Styles */
+        .sermon-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #5a6378;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8faee8;
+            box-shadow: 0 0 5px rgba(143, 174, 232, 0.3);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .clear-btn {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .clear-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Sermon List Styles */
+        .sermon-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .sermon-item {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #8faee8;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .sermon-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sermon-item h4 {
+            margin: 0 0 0.5rem 0;
+            color: #5a6378;
+        }
+
+        .sermon-item p {
+            margin: 0.3rem 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .sermon-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .edit-btn {
+            background: #8faee8;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #5a6378;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #ee5a52;
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            grid-column: 1 / -1;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #8faee8;
+            border-bottom-color: #8faee8;
+        }
+
+        .tab-btn:hover {
+            color: #5a6378;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Utility Buttons */
+        .utility-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .utility-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .export-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .export-btn:hover {
+            background: #229954;
+        }
+
+        .import-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .import-btn:hover {
+            background: #229954;
+        }
+
+        .reset-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Status Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #5a6378;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .modal-confirm {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .modal-confirm:hover {
+            background: #c0392b;
+        }
+
+        .modal-cancel {
+            background: #bdc3c7;
+            color: white;
+        }
+
+        .modal-cancel:hover {
+            background: #95a5a6;
+        }
+
+        /* Icon Selector */
+        .icon-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .icon-option {
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .icon-option:hover {
+            border-color: #8faee8;
+            background: #f9f9f9;
+        }
+
+        .icon-option.selected {
+            border-color: #8faee8;
+            background: #e8f4ff;
+        }
+
+        .icon-option i {
+            font-size: 1.5rem;
+            color: #5a6378;
+        }
+
+        .icon-option span {
+            display: block;
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .icon-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .utility-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #e8f4ff;
+            border-left: 4px solid #8faee8;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box h4 {
+            margin-top: 0;
+            color: #5a6378;
+        }
+
+        .info-box p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .info-box ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .info-box li {
+            font-size: 0.9rem;
+            margin: 0.25rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                     <li><a href="#">Ministries</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#giving">Give</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Admin Panel -->
+    <div class="admin-header">
+        <h1><i class="fas fa-cog"></i> Sermon Admin Panel</h1>
+        <p>Manage, upload, and organize all sermons for your church website</p>
+    </div>
+
+    <div class="admin-tabs">
+        <button class="tab-btn active" onclick="switchTab('add')"><i class="fas fa-plus"></i> Add New Sermon</button>
+        <button class="tab-btn" onclick="switchTab('manage')"><i class="fas fa-list"></i> Manage Sermons</button>
+        <button class="tab-btn" onclick="switchTab('settings')"><i class="fas fa-cog"></i> Settings</button>
+        <button class="tab-btn" onclick="switchTab('guide')"><i class="fas fa-book"></i> Guide</button>
+    </div>
+
+    <div class="admin-container">
+        
+        <!-- TAB 1: Add New Sermon -->
+        <div id="add" class="tab-content active">
+            <div class="admin-section">
+                <div class="message" id="message"></div>
+
+                <form class="sermon-form" id="sermonForm">
+                    <h3>Add New Sermon Message</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="title">Sermon Title *</label>
+                            <input type="text" id="title" placeholder="e.g., The Power of Faith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="author">Speaker/Pastor Name *</label>
+                            <input type="text" id="author" placeholder="e.g., Pastor Kunle Kunbi" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Sermon Date *</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category *</label>
+                            <select id="category" required>
+                                <option value="">-- Select Category --</option>
+                                <option value="faith">Faith</option>
+                                <option value="prayer">Prayer</option>
+                                <option value="worship">Worship</option>
+                                <option value="growth">Spiritual Growth</option>
+                                <option value="family">Family</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Short Description *</label>
+                        <textarea id="description" placeholder="Brief summary of the sermon" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">Full Message Content *</label>
+                        <textarea id="content" placeholder="Full sermon text content" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="audioFile">Audio File Path</label>
+                            <input type="text" id="audioFile" placeholder="e.g., sermons/message-audio.mp3">
+                            <small style="color: #999; margin-top: 0.3rem;">Upload audio to: /sermons/ folder</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="videoFile">Video File Path</label>
+                            <input type="text" id="videoFile" placeholder="e.g., sermons/message-video.mp4">
+                            <small style="color: #999; margin-top: 0.3rem;">Upload video to: /sermons/ folder</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="youtubeLink">YouTube Link (Embed URL)</label>
+                        <input type="text" id="youtubeLink" placeholder="e.g., https://www.youtube.com/embed/VIDEO_ID">
+                        <small style="color: #999; margin-top: 0.3rem;">Use YouTube embed URL from youtube.com/embed/</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Icon <span style="font-size: 0.9rem; color: #999;">(Select icon for category)</span></label>
+                        <div class="icon-selector">
+                            <div class="icon-option" onclick="selectIcon('fas fa-heart', this)">
+                                <i class="fas fa-heart"></i>
+                                <span>Heart</span>
+                            </div>
+                            <div class="icon-option" onclick="selectIcon('fas fa-hands-praying', this)">
+                                <i class="fas fa-hands-praying"></i>
+                                <span>Prayer</span>
+                            </div>
+                            <div class="icon-option" onclick="selectIcon('fas fa-people-line', this)">
+                                <i class="fas fa-people-line"></i>
+                                <span>Family</span>
+                            </div>
+                            <div class="icon-option" onclick="selectIcon('fas fa-mountain', this)">
+                                <i class="fas fa-mountain"></i>
+                                <span>Challenge</span>
+                            </div>
+                            <div class="icon-option" onclick="selectIcon('fas fa-handshake', this)">
+                                <i class="fas fa-handshake"></i>
+                                <span>Peace</span>
+                            </div>
+                            <div class="icon-option" onclick="selectIcon('fas fa-compass', this)">
+                                <i class="fas fa-compass"></i>
+                                <span>Direction</span>
+                            </div>
+                            <div class="icon-option" onclick="selectIcon('fas fa-book', this)">
+                                <i class="fas fa-book"></i>
+                                <span>Word</span>
+                            </div>
+                            <div class="icon-option" onclick="selectIcon('fas fa-fire', this)">
+                                <i class="fas fa-fire"></i>
+                                <span>Fire</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="icon" value="fas fa-heart">
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="submit-btn" style="flex: 1;">
+                            <i class="fas fa-save"></i> Save Sermon
+                        </button>
+                        <button type="reset" class="clear-btn" style="flex: 1;">
+                            <i class="fas fa-times"></i> Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB 2: Manage Sermons -->
+        <div id="manage" class="tab-content">
+            <div class="admin-section">
+                <h3><i class="fas fa-list"></i> All Sermons</h3>
+                <p style="color: #666; margin-bottom: 1rem;">Total Sermons: <strong id="sermonCount">0</strong></p>
+
+                <div class="utility-buttons">
+                    <button class="utility-btn export-btn" onclick="exportSermons()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button class="utility-btn import-btn" onclick="document.getElementById('importFile').click()">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                </div>
+                <input type="file" id="importFile" style="display:none;" accept=".json" onchange="handleImport(event)">
+
+                <div class="sermon-list" id="sermonList">
+                    <!-- Sermons will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Settings & Utilities -->
+        <div id="settings" class="tab-content">
+            <div class="admin-section">
+                <h3><i class="fas fa-cog"></i> Settings & Utilities</h3>
+
+                <div class="info-box">
+                    <h4>Danger Zone</h4>
+                    <p>Be careful with these actions. They cannot be undone.</p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <button class="utility-btn reset-btn" onclick="confirmReset()" style="background: #e74c3c;">
+                        <i class="fas fa-redo"></i> Reset All Sermons to Default
+                    </button>
+                </div>
+
+                <hr style="margin: 2rem 0; border: none; border-top: 1px solid #ddd;">
+
+                <h4>Storage Information</h4>
+                <div class="info-box">
+                    <p><strong>Storage Type:</strong> Browser LocalStorage</p>
+                    <p><strong>Data Persists:</strong> Yes (until browser data is cleared)</p>
+                    <p><strong>Total Sermons:</strong> <span id="totalSermons">0</span></p>
+                    <p><strong>Storage Used:</strong> <span id="storageUsed">0</span> KB</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: User Guide -->
+        <div id="guide" class="tab-content">
+            <div class="admin-section">
+                <h3><i class="fas fa-book"></i> Admin Guide</h3>
+
+                <div class="info-box">
+                    <h4><i class="fas fa-info-circle"></i> How to Add Sermons</h4>
+                    <ol>
+                        <li>Click "Add New Sermon" tab</li>
+                        <li>Fill in all required fields (marked with *)</li>
+                        <li>Upload files to your server in the /sermons/ folder</li>
+                        <li>Enter the file paths in the form</li>
+                        <li>Click "Save Sermon"</li>
+                        <li>Sermon will appear on the Sermons page immediately</li>
+                    </ol>
+                </div>
+
+                <div class="info-box">
+                    <h4><i class="fas fa-file"></i> File Upload Instructions</h4>
+                    <ul>
+                        <li><strong>Audio Files:</strong> MP3, WAV, OGG (recommended: MP3)</li>
+                        <li><strong>Video Files:</strong> MP4, WebM (recommended: MP4)</li>
+                        <li><strong>Upload Location:</strong> Create a /sermons/ folder in your website root</li>
+                        <li><strong>File Names:</strong> Use simple names: message-audio.mp3</li>
+                        <li><strong>File Paths:</strong> Enter as: sermons/message-audio.mp3</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4><i class="fas fa-youtube"></i> YouTube Links</h4>
+                    <ul>
+                        <li>Go to YouTube video</li>
+                        <li>Click "Share" → "Embed"</li>
+                        <li>Copy the src URL: https://www.youtube.com/embed/VIDEO_ID</li>
+                        <li>Paste in the YouTube Link field</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4><i class="fas fa-database"></i> Data Management</h4>
+                    <ul>
+                        <li><strong>Export:</strong> Backup your sermons as JSON file</li>
+                        <li><strong>Import:</strong> Restore sermons from JSON backup</li>
+                        <li><strong>Auto-save:</strong> Changes save automatically to browser</li>
+                        <li><strong>Persistence:</strong> Data survives browser restarts</li>
+                        <li><strong>Clear Data:</strong> Only clears if you delete browser data</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4><i class="fas fa-users"></i> Viewing Sermons</h4>
+                    <ul>
+                        <li>Go to: <strong>Sermons</strong> page from navigation</li>
+                        <li>Users can search sermons by title or speaker</li>
+                        <li>Users can filter by category and date</li>
+                        <li>Users can click sermons to read full content</li>
+                        <li>Users can download audio/video files</li>
+                        <li>Users can watch videos or listen to audio directly</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Confirm Action</div>
+            <p id="confirmMessage"></p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-cancel" onclick="closeConfirmModal()">Cancel</button>
+                <button class="modal-btn modal-confirm" id="confirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Admin Panel</h4>
+                <p>Manage church sermons and media content</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Back to Home</a></li>
+                    <li><a href="sermons.html">View Sermons</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RCCG Wisdom of Parish. Admin Panel.</p>
+        </div>
+    </footer>
+
+    <!-- Load Sermon Manager -->
+    <script src="js/sermon-admin.js"></script>
+
+    <script>
+        // Selected icon variable
+        let selectedIcon = 'fas fa-heart';
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllSermons();
+            updateStorageInfo();
+            setTodayDate();
+        });
+
+        // Set today's date as default
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+        }
+
+        // Switch tabs
+        function switchTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active to clicked button
+            event.target.classList.add('active');
+
+            // Refresh sermon list if switching to manage tab
+            if (tabName === 'manage') {
+                loadAllSermons();
+            }
+
+            // Update info if switching to settings
+            if (tabName === 'settings') {
+                updateStorageInfo();
+            }
+        }
+
+        // Select icon
+        function selectIcon(iconClass, element) {
+            // Remove previous selection
+            document.querySelectorAll('.icon-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Add selection to clicked
+            element.classList.add('selected');
+
+            // Update hidden input
+            selectedIcon = iconClass;
+            document.getElementById('icon').value = iconClass;
+        }
+
+        // Handle form submission
+        document.getElementById('sermonForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const sermon = {
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                date: document.getElementById('date').value,
+                description: document.getElementById('description').value,
+                content: document.getElementById('content').value,
+                audioFile: document.getElementById('audioFile').value,
+                videoFile: document.getElementById('videoFile').value,
+                youtubeLink: document.getElementById('youtubeLink').value,
+                category: document.getElementById('category').value,
+                icon: selectedIcon
+            };
+
+            // Add sermon
+            sermonManager.addSermon(sermon);
+
+            // Show success message
+            showMessage('success', 'Sermon added successfully! It will appear on your Sermons page.');
+
+            // Reset form
+            document.getElementById('sermonForm').reset();
+            setTodayDate();
+            selectedIcon = 'fas fa-heart';
+            document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector('.icon-option').classList.add('selected');
+
+            // Refresh sermon list
+            loadAllSermons();
+        });
+
+        // Load and display all sermons
+        function loadAllSermons() {
+            const sermons = sermonManager.getAllSermons();
+            const sermonList = document.getElementById('sermonList');
+            sermonList.innerHTML = '';
+
+            document.getElementById('sermonCount').textContent = sermons.length;
+
+            if (sermons.length === 0) {
+                sermonList.innerHTML = '<p style="color: #999; text-align: center; padding: 2rem;">No sermons yet. Add your first sermon!</p>';
+                return;
+            }
+
+            sermons.forEach(sermon => {
+                const sermonEl = document.createElement('div');
+                sermonEl.className = 'sermon-item';
+                sermonEl.innerHTML = `
+                    <h4><i class="${sermon.icon}"></i> ${sermon.title}</h4>
+                    <p><strong>Speaker:</strong> ${sermon.author}</p>
+                    <p><strong>Date:</strong> ${formatDate(sermon.date)}</p>
+                    <p><strong>Category:</strong> ${sermon.category}</p>
+                    <p style="color: #888; font-size: 0.9rem;">${sermon.description}</p>
+                    <div class="sermon-actions">
+                        <button class="edit-btn" onclick="editSermon(${sermon.id})" title="Edit sermon data">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="delete-btn" onclick="deleteSermonConfirm(${sermon.id}, '${sermon.title}')" title="Delete sermon">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                sermonList.appendChild(sermonEl);
+            });
+        }
+
+        // Delete sermon with confirmation
+        function deleteSermonConfirm(id, title) {
+            showConfirmModal(`Delete "${title}"?`, 'This action cannot be undone.', () => {
+                sermonManager.deleteSermon(id);
+                showMessage('success', 'Sermon deleted successfully!');
+                loadAllSermons();
+                closeConfirmModal();
+            });
+        }
+
+        // Edit sermon
+        function editSermon(id) {
+            showMessage('info', 'Edit feature coming soon. For now, delete and re-add with updated information.');
+        }
+
+        // Export sermons
+        function exportSermons() {
+            const data = sermonManager.exportSermons();
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `wisdom-sermons-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showMessage('success', 'Sermons exported successfully!');
+        }
+
+        // Handle import
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    if (sermonManager.importSermons(e.target.result)) {
+                        showMessage('success', 'Sermons imported successfully!');
+                        loadAllSermons();
+                    } else {
+                        showMessage('error', 'Invalid file format. Please use JSON file.');
+                    }
+                } catch (error) {
+                    showMessage('error', 'Error importing file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Reset to default
+        function confirmReset() {
+            showConfirmModal('Reset All Sermons?', 'This will replace all current sermons with default messages. This action cannot be undone.', () => {
+                localStorage.removeItem('wisdomSermons');
+                sermonManager.initializeDefaultSermons();
+                showMessage('success', 'Sermons reset to default!');
+                loadAllSermons();
+                closeConfirmModal();
+            });
+        }
+
+        // Show message
+        function showMessage(type, text) {
+            const msg = document.getElementById('message');
+            msg.className = `message show ${type}`;
+            msg.textContent = text;
+            setTimeout(() => msg.classList.remove('show'), 5000);
+        }
+
+        // Confirm modal
+        function showConfirmModal(title, message, callback) {
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmBtn').onclick = callback;
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', options);
+        }
+
+        // Update storage info
+        function updateStorageInfo() {
+            const sermons = sermonManager.getAllSermons();
+            document.getElementById('totalSermons').textContent = sermons.length;
+            
+            const dataSize = JSON.stringify(sermons).length;
+            const sizeInKB = (dataSize / 1024).toFixed(2);
+            document.getElementById('storageUsed').textContent = sizeInKB;
+        }
+
+        // Navbar functionality
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.navbar1 ul').classList.toggle('active');
+        });
+    </script>
+
+    <!-- External Scripts -->
+    <script src="js/global.js"></script>
+
+</body>
+</html>

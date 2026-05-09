@@ -1,0 +1,165 @@
+/**
+ * CONTACT PAGE STYLES
+ * ===================
+ * Styles for contact.html page
+ * Includes: Contact form, contact information, team directory
+ */
+
+/* Forms */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;  
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Prayer form styling */
+.prayer form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    background: lightgrey;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Contact section styling */
+.contact-section {
+    padding: 3rem 2rem;
+    background-color: #f9f9f9;
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.contact-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.contact-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Contacts grid for department contact listing */
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.contact-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.contact-card h3 {
+    color: #5a6378;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.contact-card p {
+    color: #666;
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+}
+
+/* Quick contact box */
+.quick-contact {
+    background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.quick-contact h3 {
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.quick-contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quick-contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.quick-contact-link:hover {
+    background-color: rgba(255,255,255,0.2);
+    transform: translateX(5px);
+}
+
+.quick-contact-link i {
+    font-size: 1.3rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .contacts-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .contact-section {
+        padding: 2rem 1rem;
+    }
+
+    .quick-contact-links {
+        gap: 0.8rem;
+    }
+
+    .quick-contact-link {
+        padding: 0.6rem;
+    }
+}

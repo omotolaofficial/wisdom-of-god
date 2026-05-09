@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magazine Admin Panel - RCCG Wisdom of Parish</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Admin Panel Specific Styles */
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .admin-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .admin-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* Form Styles */
+        .magazine-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #5a6378;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8faee8;
+            box-shadow: 0 0 5px rgba(143, 174, 232, 0.3);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .clear-btn {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .clear-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Article List Styles */
+        .article-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .article-item {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #8faee8;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .article-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-item h4 {
+            margin: 0 0 0.5rem 0;
+            color: #5a6378;
+        }
+
+        .article-item p {
+            margin: 0.3rem 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .edit-btn {
+            background: #8faee8;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #5a6378;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #ee5a52;
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            grid-column: 1 / -1;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #8faee8;
+            border-bottom-color: #8faee8;
+        }
+
+        .tab-btn:hover {
+            color: #5a6378;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Magazine Selector */
+        .magazine-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .magazine-tab {
+            padding: 0.6rem 1rem;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .magazine-tab:hover {
+            border-color: #8faee8;
+            color: #5a6378;
+        }
+
+        .magazine-tab.active {
+            background: #8faee8;
+            color: white;
+            border-color: #8faee8;
+        }
+
+        /* Status Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #5a6378;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .modal-confirm {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .modal-confirm:hover {
+            background: #c0392b;
+        }
+
+        .modal-cancel {
+            background: #bdc3c7;
+            color: white;
+        }
+
+        .modal-cancel:hover {
+            background: #95a5a6;
+        }
+
+        /* Utility Buttons */
+        .utility-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .utility-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .export-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .export-btn:hover {
+            background: #229954;
+        }
+
+        .import-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .import-btn:hover {
+            background: #229954;
+        }
+
+        .reset-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #e8f4ff;
+            border-left: 4px solid #8faee8;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box h4 {
+            margin-top: 0;
+            color: #5a6378;
+        }
+
+        .info-box p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-tabs {
+                flex-direction: column;
+            }
+
+            .magazine-tabs {
+                justify-content: space-between;
+            }
+
+            .utility-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                     <li><a href="#">Ministries</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#giving">Give</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Admin Panel -->
+    <div class="admin-header">
+        <h1><i class="fas fa-newspaper"></i> Magazine Admin Panel</h1>
+        <p>Add, edit, and manage articles across all magazine sections</p>
+    </div>
+
+    <div class="admin-tabs">
+        <button class="tab-btn active" onclick="switchTab('add')"><i class="fas fa-plus"></i> Add Article</button>
+        <button class="tab-btn" onclick="switchTab('manage')"><i class="fas fa-list"></i> Manage Articles</button>
+        <button class="tab-btn" onclick="switchTab('settings')"><i class="fas fa-cog"></i> Settings</button>
+    </div>
+
+    <div class="admin-container">
+        
+        <!-- TAB 1: Add Articles -->
+        <div id="add" class="tab-content active">
+            <div class="admin-section">
+                <div class="message" id="message"></div>
+
+                <h3>Add New Article</h3>
+                
+                <div class="info-box">
+                    <h4>Select Magazine Section</h4>
+                    <p>Choose which magazine section to add this article to.</p>
+                </div>
+
+                <div class="magazine-tabs" id="magazineTabs">
+                    <button class="magazine-tab active" onclick="selectMagazine('health-session', this)">
+                        <i class="fas fa-heart"></i> Health Session
+                    </button>
+                    <button class="magazine-tab" onclick="selectMagazine('youth-corner', this)">
+                        <i class="fas fa-star"></i> Youth Corner
+                    </button>
+                    <button class="magazine-tab" onclick="selectMagazine('inspiration', this)">
+                        <i class="fas fa-sunrise"></i> Inspiration
+                    </button>
+                    <button class="magazine-tab" onclick="selectMagazine('spirituality', this)">
+                        <i class="fas fa-spiral"></i> Spirituality
+                    </button>
+                </div>
+
+                <form class="magazine-form" id="articleForm">
+                    <input type="hidden" id="selectedMagazine" value="health-session">
+                    <input type="hidden" id="editingId" value="">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="articleTitle">Article Title *</label>
+                            <input type="text" id="articleTitle" placeholder="e.g., The Power of Faith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="articleAuthor">Author Name *</label>
+                            <input type="text" id="articleAuthor" placeholder="e.g., Pastor John Smith" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleDate">Article Date *</label>
+                        <input type="date" id="articleDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleDescription">Short Description *</label>
+                        <textarea id="articleDescription" placeholder="Brief summary of the article" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleContent">Full Article Content *</label>
+                        <textarea id="articleContent" placeholder="Complete article text" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articleIcon">Article Icon *</label>
+                        <select id="articleIcon" required>
+                            <option value="">-- Select Icon --</option>
+                            <option value="fas fa-heart">Heart</option>
+                            <option value="fas fa-hands-praying">Prayer Hands</option>
+                            <option value="fas fa-star">Star</option>
+                            <option value="fas fa-book">Book</option>
+                            <option value="fas fa-brain">Brain</option>
+                            <option value="fas fa-sunrise">Sunrise</option>
+                            <option value="fas fa-handshake">Handshake</option>
+                            <option value="fas fa-shield">Shield</option>
+                            <option value="fas fa-gift">Gift</option>
+                            <option value="fas fa-tree">Tree</option>
+                            <option value="fas fa-apple">Apple</option>
+                            <option value="fas fa-dumbbell">Dumbbell</option>
+                            <option value="fas fa-utensils">Utensils</option>
+                            <option value="fas fa-moon">Moon</option>
+                            <option value="fas fa-compass">Compass</option>
+                            <option value="fas fa-dove">Dove</option>
+                            <option value="fas fa-hands-helping">Helping Hands</option>
+                            <option value="fas fa-shield-alt">Shield Alt</option>
+                            <option value="fas fa-seedling">Seedling</option>
+                            <option value="fas fa-spiral">Spiral</option>
+                            <option value="fas fa-light-bulb">Light Bulb</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="submit-btn" style="flex: 1;">
+                            <i class="fas fa-save"></i> Save Article
+                        </button>
+                        <button type="reset" class="clear-btn" style="flex: 1;">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB 2: Manage Articles -->
+        <div id="manage" class="tab-content">
+            <div class="admin-section">
+                <h3><i class="fas fa-list"></i> Manage Articles</h3>
+
+                <div class="info-box">
+                    <h4>Select Magazine to Manage</h4>
+                    <p>Choose a magazine section to view and edit its articles.</p>
+                </div>
+
+                <div class="magazine-tabs" id="manageMagazineTabs">
+                    <button class="magazine-tab active" onclick="loadMagazineArticles('health-session', this)">
+                        <i class="fas fa-heart"></i> Health Session
+                    </button>
+                    <button class="magazine-tab" onclick="loadMagazineArticles('youth-corner', this)">
+                        <i class="fas fa-star"></i> Youth Corner
+                    </button>
+                    <button class="magazine-tab" onclick="loadMagazineArticles('inspiration', this)">
+                        <i class="fas fa-sunrise"></i> Inspiration
+                    </button>
+                    <button class="magazine-tab" onclick="loadMagazineArticles('spirituality', this)">
+                        <i class="fas fa-spiral"></i> Spirituality
+                    </button>
+                </div>
+
+                <p style="color: #666; margin-bottom: 1rem;">Total Articles: <strong id="articleCount">0</strong></p>
+
+                <div class="utility-buttons">
+                    <button class="utility-btn export-btn" onclick="exportMagazines()">
+                        <i class="fas fa-download"></i> Export All
+                    </button>
+                    <button class="utility-btn import-btn" onclick="document.getElementById('importFile').click()">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                </div>
+                <input type="file" id="importFile" style="display:none;" accept=".json" onchange="handleImport(event)">
+
+                <div class="article-list" id="articleList">
+                    <!-- Articles will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Settings -->
+        <div id="settings" class="tab-content">
+            <div class="admin-section">
+                <h3><i class="fas fa-cog"></i> Settings & Utilities</h3>
+
+                <div class="info-box">
+                    <h4>Danger Zone</h4>
+                    <p>Be careful with these actions. They cannot be undone without a backup.</p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <button class="utility-btn reset-btn" onclick="confirmReset()" style="background: #e74c3c;">
+                        <i class="fas fa-redo"></i> Reset All Articles to Default
+                    </button>
+                </div>
+
+                <hr style="margin: 2rem 0; border: none; border-top: 1px solid #ddd;">
+
+                <h4>Storage Information</h4>
+                <div class="info-box">
+                    <p><strong>Storage Type:</strong> Browser LocalStorage</p>
+                    <p><strong>Data Persists:</strong> Yes (until browser data is cleared)</p>
+                    <p><strong>Magazine Sections:</strong> 4 (Health, Youth, Inspiration, Spirituality)</p>
+                    <p><strong>Total Articles:</strong> <span id="totalArticles">0</span></p>
+                    <p><strong>Storage Used:</strong> <span id="storageUsed">0</span> KB</p>
+                </div>
+
+                <hr style="margin: 2rem 0; border: none; border-top: 1px solid #ddd;">
+
+                <h4><i class="fas fa-book"></i> How to Use</h4>
+                <div class="info-box">
+                    <p><strong>1. Add Articles:</strong> Go to "Add Article" tab and select a magazine section</p>
+                    <p><strong>2. Fill Form:</strong> Enter title, author, date, description, content, and icon</p>
+                    <p><strong>3. Save:</strong> Click "Save Article" - it appears on your website immediately</p>
+                    <p><strong>4. Edit:</strong> Use "Edit" button in Manage tab to update articles</p>
+                    <p><strong>5. Delete:</strong> Click "Delete" to remove articles you don't want</p>
+                    <p><strong>6. Backup:</strong> Use "Export All" to backup before making changes</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Confirm Action</div>
+            <p id="confirmMessage"></p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-cancel" onclick="closeConfirmModal()">Cancel</button>
+                <button class="modal-btn modal-confirm" id="confirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Admin Panel</h4>
+                <p>Manage church magazine articles</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Back to Home</a></li>
+                    <li><a href="health-session.html">View Magazines</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RCCG Wisdom of Parish. Admin Panel.</p>
+        </div>
+    </footer>
+
+    <!-- Load Magazine Manager -->
+    <script src="js/magazine-admin.js"></script>
+
+    <script>
+        let selectedMagazine = 'health-session';
+        let editingId = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            setTodayDate();
+            loadMagazineArticles('health-session');
+            updateStorageInfo();
+        });
+
+        // Set today's date
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('articleDate').value = today;
+        }
+
+        // Switch main tabs
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.admin-tabs .tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'manage') {
+                loadMagazineArticles(selectedMagazine);
+            }
+
+            if (tabName === 'settings') {
+                updateStorageInfo();
+            }
+        }
+
+        // Select magazine
+        function selectMagazine(magazine, element) {
+            selectedMagazine = magazine;
+            document.getElementById('selectedMagazine').value = magazine;
+
+            document.querySelectorAll('#magazineTabs .magazine-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            document.getElementById('articleForm').reset();
+            setTodayDate();
+            document.getElementById('editingId').value = '';
+            editingId = null;
+        }
+
+        // Load magazine articles
+        function loadMagazineArticles(magazine, element) {
+            selectedMagazine = magazine;
+
+            if (element) {
+                document.querySelectorAll('#manageMagazineTabs .magazine-tab').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                element.classList.add('active');
+            }
+
+            const articles = magazineManager.getArticles(magazine);
+            displayArticles(articles, magazine);
+        }
+
+        // Display articles
+        function displayArticles(articles, magazine) {
+            const articleList = document.getElementById('articleList');
+            document.getElementById('articleCount').textContent = articles.length;
+
+            if (articles.length === 0) {
+                articleList.innerHTML = '<p style="color: #999; text-align: center; padding: 2rem;">No articles yet. Add your first article!</p>';
+                return;
+            }
+
+            articleList.innerHTML = articles.map(article => `
+                <div class="article-item">
+                    <h4><i class="${article.icon}"></i> ${article.title}</h4>
+                    <p><strong>Author:</strong> ${article.author}</p>
+                    <p><strong>Date:</strong> ${formatDate(article.date)}</p>
+                    <p style="color: #888; font-size: 0.9rem;">${article.description}</p>
+                    <div class="article-actions">
+                        <button class="edit-btn" onclick="editArticle(${article.id}, '${magazine}')" title="Edit article">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="delete-btn" onclick="deleteArticleConfirm(${article.id}, '${magazine}', '${article.title}')" title="Delete article">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Edit article
+        function editArticle(id, magazine) {
+            const article = magazineManager.getArticleById(magazine, id);
+            if (!article) return;
+
+            selectedMagazine = magazine;
+            document.getElementById('selectedMagazine').value = magazine;
+
+            document.getElementById('articleTitle').value = article.title;
+            document.getElementById('articleAuthor').value = article.author;
+            document.getElementById('articleDate').value = article.date;
+            document.getElementById('articleDescription').value = article.description;
+            document.getElementById('articleContent').value = article.content;
+            document.getElementById('articleIcon').value = article.icon;
+            document.getElementById('editingId').value = id;
+            editingId = id;
+
+            // Scroll to form
+            document.getElementById('add').scrollIntoView({ behavior: 'smooth' });
+
+            // Switch to Add tab
+            document.querySelectorAll('.admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.admin-tabs .tab-btn:first-child').classList.add('active');
+            document.getElementById('add').classList.add('active');
+
+            showMessage('info', 'Edit mode active. Make changes and save.');
+        }
+
+        // Delete article confirmation
+        function deleteArticleConfirm(id, magazine, title) {
+            showConfirmModal(`Delete "${title}"?`, 'This action cannot be undone.', () => {
+                magazineManager.deleteArticle(magazine, id);
+                showMessage('success', 'Article deleted successfully!');
+                loadMagazineArticles(magazine);
+                closeConfirmModal();
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('articleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const article = {
+                title: document.getElementById('articleTitle').value,
+                author: document.getElementById('articleAuthor').value,
+                date: document.getElementById('articleDate').value,
+                description: document.getElementById('articleDescription').value,
+                content: document.getElementById('articleContent').value,
+                icon: document.getElementById('articleIcon').value
+            };
+
+            const magazine = document.getElementById('selectedMagazine').value;
+            const editId = document.getElementById('editingId').value;
+
+            if (editId) {
+                // Update existing
+                magazineManager.updateArticle(magazine, parseInt(editId), article);
+                showMessage('success', 'Article updated successfully!');
+                editingId = null;
+                document.getElementById('editingId').value = '';
+            } else {
+                // Add new
+                magazineManager.addArticle(magazine, article);
+                showMessage('success', 'Article added successfully!');
+            }
+
+            document.getElementById('articleForm').reset();
+            setTodayDate();
+            loadMagazineArticles(magazine);
+        });
+
+        // Export magazines
+        function exportMagazines() {
+            const data = magazineManager.exportMagazines();
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `wisdom-magazines-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showMessage('success', 'Magazines exported successfully!');
+        }
+
+        // Handle import
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    if (magazineManager.importMagazines(e.target.result)) {
+                        showMessage('success', 'Magazines imported successfully!');
+                        loadMagazineArticles(selectedMagazine);
+                    } else {
+                        showMessage('error', 'Invalid file format. Please use JSON file.');
+                    }
+                } catch (error) {
+                    showMessage('error', 'Error importing file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Reset to default
+        function confirmReset() {
+            showConfirmModal('Reset All Articles?', 'This will replace all current articles with default content. This action cannot be undone.', () => {
+                localStorage.removeItem('wisdomMagazines');
+                magazineManager.initializeDefaultMagazines();
+                showMessage('success', 'Articles reset to default!');
+                loadMagazineArticles('health-session');
+                closeConfirmModal();
+            });
+        }
+
+        // Show message
+        function showMessage(type, text) {
+            const msg = document.getElementById('message');
+            msg.className = `message show ${type}`;
+            msg.textContent = text;
+            setTimeout(() => msg.classList.remove('show'), 5000);
+        }
+
+        // Confirm modal
+        function showConfirmModal(title, message, callback) {
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmBtn').onclick = callback;
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', options);
+        }
+
+        // Update storage info
+        function updateStorageInfo() {
+            const magazines = magazineManager.getAllMagazines();
+            let totalArticles = 0;
+            
+            for (let mag in magazines) {
+                totalArticles += magazines[mag].length;
+            }
+            
+            document.getElementById('totalArticles').textContent = totalArticles;
+            
+            const dataSize = JSON.stringify(magazines).length;
+            const sizeInKB = (dataSize / 1024).toFixed(2);
+            document.getElementById('storageUsed').textContent = sizeInKB;
+        }
+
+        // Mobile menu
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.navbar1 ul').classList.toggle('active');
+        });
+
+        // Navbar functionality
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.navbar1 ul').classList.toggle('active');
+        });
+    </script>
+
+    <!-- External Scripts -->
+    <script src="js/global.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Management Admin - RCCG Wisdom of Parish</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/contacts-manager.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Admin Container */
+        .admin-header {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .admin-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Login Section */
+        .login-container {
+            max-width: 500px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        .login-btn {
+            padding: 1rem;
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 99, 120, 0.3);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .admin-tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #999;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .admin-tab.active {
+            color: #8faee8;
+            border-bottom-color: #8faee8;
+        }
+
+        .admin-tab:hover {
+            color: #5a6378;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form Styles */
+        .contact-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group select {
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+            background: white;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            grid-column: 1 / -1;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff5252;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table th {
+            background: #f9f9f9;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+        }
+
+        table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Logout */
+        .logout-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Church Info Section */
+        .church-info-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .church-info-form .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-panel {
+                padding: 1rem;
+            }
+
+            .admin-tabs {
+                gap: 0.5rem;
+            }
+
+            .admin-tab {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .tab-content {
+                padding: 1.5rem;
+            }
+
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            table th, table td {
+                padding: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <h1><i class="fas fa-cog"></i> Contact Management Admin</h1>
+        <p>Manage church contacts and information</p>
+    </header>
+
+    <!-- Login Section -->
+    <div class="login-container" id="loginSection">
+        <h2>Admin Access</h2>
+        <form class="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="adminPassword">Enter Admin Password:</label>
+                <input type="password" id="adminPassword" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+
+        <!-- Alert Container -->
+        <div class="alert" id="alertBox"></div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchTab('contacts')">
+                <i class="fas fa-users"></i> Manage Contacts
+            </button>
+            <button class="admin-tab" onclick="switchTab('church-info')">
+                <i class="fas fa-church"></i> Church Info
+            </button>
+        </div>
+
+        <!-- Contact Management Tab -->
+        <div class="tab-content active" id="contacts-tab">
+            <h2>Add New Contact</h2>
+            <form class="contact-form" onsubmit="handleAddContact(event)">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" id="contactName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" id="contactTitle" placeholder="Job Title" required>
+                </div>
+                <div class="form-group">
+                    <label>Department *</label>
+                    <select id="contactDepartment" required>
+                        <option value="">Select Department</option>
+                        <option value="leadership">Church Leadership</option>
+                        <option value="ministry">Ministry Leaders</option>
+                        <option value="finance">Finance Department</option>
+                        <option value="administration">Administration</option>
+                        <option value="support">Support Services</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="contactPhone" placeholder="+234 (0) XXX XXX XXXX">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="contactEmail" placeholder="email@wisdomchurch.org">
+                </div>
+                <div class="form-group">
+                    <label>Office Location</label>
+                    <input type="text" id="contactOfficeLocation" placeholder="Building and Room">
+                </div>
+                <div class="form-group">
+                    <label>Office Hours</label>
+                    <input type="text" id="contactOfficeHours" placeholder="e.g., Mon - Fri: 9:00 AM - 5:00 PM">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Contact</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetContactForm()">Clear</button>
+                </div>
+            </form>
+
+            <h2 style="margin-top: 2rem;">Current Contacts</h2>
+            <div class="table-container">
+                <table id="contactsTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Title</th>
+                            <th>Department</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contactsTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Church Info Tab -->
+        <div class="tab-content" id="church-info-tab">
+            <h2>Church Information</h2>
+            <form class="church-info-form" onsubmit="handleUpdateChurchInfo(event)">
+                <div class="form-group full">
+                    <label>Church Name *</label>
+                    <input type="text" id="churchName" placeholder="RCCG Wisdom of Parish" required>
+                </div>
+                <div class="form-group full">
+                    <label>Address *</label>
+                    <input type="text" id="churchAddress" placeholder="Full church address" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="churchPhone" placeholder="+234 (0) XXX XXX XXXX" required>
+                </div>
+                <div class="form-group">
+                    <label>Prayer Line *</label>
+                    <input type="tel" id="churchPrayerLine" placeholder="+234 (0) XXX XXX XXXX" required>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="churchEmail" placeholder="info@wisdomchurch.org" required>
+                </div>
+                <div class="form-group">
+                    <label>Website *</label>
+                    <input type="text" id="churchWebsite" placeholder="www.wisdomchurch.org" required>
+                </div>
+                <div class="form-group full">
+                    <label>Office Location</label>
+                    <input type="text" id="churchOfficeLocation" placeholder="Church headquarters location">
+                </div>
+                <div class="form-group full">
+                    <label>Vision</label>
+                    <input type="text" id="churchVision" placeholder="Church vision statement">
+                </div>
+                <div class="form-group full">
+                    <label>Mission</label>
+                    <input type="text" id="churchMission" placeholder="Church mission statement">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Church Info</button>
+                </div>
+            </form>
+
+            <h2 style="margin-top: 2rem;">Service Times</h2>
+            <p style="color: #666; margin-bottom: 1rem;">Edit service times in the contact form below and they will be saved to the church information.</p>
+            <div id="serviceTimesContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Login Handler
+        function handleLogin(e) {
+            e.preventDefault();
+            const password = document.getElementById('adminPassword').value;
+            const correctPassword = ContactsManager.DEFAULT_ADMIN_PASSWORD;
+
+            if (password === correctPassword) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminPanel').classList.add('active');
+                loadContactsList();
+                loadChurchInfo();
+                showAlert('Welcome! You are now logged in.', 'success');
+            } else {
+                showAlert('Incorrect password. Please try again.', 'error');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        // Logout Handler
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                document.getElementById('adminPanel').classList.remove('active');
+                document.getElementById('loginSection').style.display = 'block';
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        // Switch Tabs
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.admin-tab');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Load Contacts List
+        function loadContactsList() {
+            const contacts = ContactsManager.getAll();
+            const tbody = document.getElementById('contactsTableBody');
+
+            tbody.innerHTML = contacts.map(contact => `
+                <tr>
+                    <td>${contact.name}</td>
+                    <td>${contact.title}</td>
+                    <td>${ContactsManager.getDepartmentLabel(contact.department)}</td>
+                    <td>${contact.phone || 'N/A'}</td>
+                    <td>${contact.email || 'N/A'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-secondary" onclick="editContact(${contact.id})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteContact(${contact.id})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Handle Add Contact
+        function handleAddContact(e) {
+            e.preventDefault();
+
+            const contactData = {
+                name: document.getElementById('contactName').value,
+                title: document.getElementById('contactTitle').value,
+                department: document.getElementById('contactDepartment').value,
+                phone: document.getElementById('contactPhone').value,
+                email: document.getElementById('contactEmail').value,
+                office_location: document.getElementById('contactOfficeLocation').value,
+                office_hours: document.getElementById('contactOfficeHours').value
+            };
+
+            ContactsManager.add(contactData);
+            showAlert(`Contact "${contactData.name}" added successfully!`, 'success');
+            resetContactForm();
+            loadContactsList();
+        }
+
+        // Reset Contact Form
+        function resetContactForm() {
+            document.querySelector('.contact-form').reset();
+        }
+
+        // Edit Contact (placeholder)
+        function editContact(id) {
+            alert('Edit functionality - populate form with contact details');
+        }
+
+        // Delete Contact
+        function deleteContact(id) {
+            const contact = ContactsManager.getById(id);
+            if (confirm(`Delete "${contact.name}"? This cannot be undone.`)) {
+                ContactsManager.delete(id);
+                showAlert(`Contact "${contact.name}" deleted successfully!`, 'success');
+                loadContactsList();
+            }
+        }
+
+        // Load Church Info
+        function loadChurchInfo() {
+            const info = ContactsManager.getChurchInfo();
+            document.getElementById('churchName').value = info.name || '';
+            document.getElementById('churchAddress').value = info.address || '';
+            document.getElementById('churchPhone').value = info.phone || '';
+            document.getElementById('churchPrayerLine').value = info.prayer_line || '';
+            document.getElementById('churchEmail').value = info.email || '';
+            document.getElementById('churchWebsite').value = info.website || '';
+            document.getElementById('churchOfficeLocation').value = info.office_location || '';
+            document.getElementById('churchVision').value = info.vision || '';
+            document.getElementById('churchMission').value = info.mission || '';
+        }
+
+        // Handle Update Church Info
+        function handleUpdateChurchInfo(e) {
+            e.preventDefault();
+
+            const infoData = {
+                name: document.getElementById('churchName').value,
+                address: document.getElementById('churchAddress').value,
+                phone: document.getElementById('churchPhone').value,
+                prayer_line: document.getElementById('churchPrayerLine').value,
+                email: document.getElementById('churchEmail').value,
+                website: document.getElementById('churchWebsite').value,
+                office_location: document.getElementById('churchOfficeLocation').value,
+                vision: document.getElementById('churchVision').value,
+                mission: document.getElementById('churchMission').value
+            };
+
+            ContactsManager.updateChurchInfo(infoData);
+            showAlert('Church information updated successfully!', 'success');
+        }
+
+        // Show Alert
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+    <script src="js/global.js"></script>
+</body>
+</html>

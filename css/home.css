@@ -1,0 +1,245 @@
+/**
+ * HOME PAGE STYLES
+ * ================
+ * Styles for index.html home page
+ * Includes: Hero section, featured sections, carousel
+ */
+
+/*-----hero section-----*/
+.hero {
+    background: url('../images/realbg.jpg') no-repeat center center/cover;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    position: relative;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: -1;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+}
+
+/* Carousel Styles */
+.carousel-section {
+    padding: 3rem 2rem;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.carousel-section h2 {
+    font-size: 2rem;
+    color: #5a6378;
+    margin-bottom: 2rem;
+}
+
+.carousel-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(90, 99, 120, 0.7);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    z-index: 10;
+}
+
+.carousel-control:hover {
+    background-color: rgba(90, 99, 120, 0.9);
+}
+
+.carousel-control.prev {
+    left: 15px;
+}
+
+.carousel-control.next {
+    right: 15px;
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 15px;
+    background-color: white;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.indicator.active {
+    background-color: #5a6378;
+}
+
+/* Pastor section */
+.pastor {
+    padding: 3rem 2rem;
+    background-color: #f9f9f9;
+}
+
+.pastor h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #5a6378;
+    margin-bottom: 2rem;
+}
+
+.pastor .container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    align-items: start;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pastor-photo {
+    max-width: 100%;
+    width: 100%;
+    height: 400px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pastor-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.pastor-text h2 {
+    text-align: justify;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+}
+
+.pastor-text p {
+    text-align: justify;
+    line-height: 1.2;
+    color: #555;
+    font-size: 0.95rem;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.pastor-text strong {
+    display: block;
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #5a6378;
+    font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .carousel-wrapper {
+        height: 300px;
+    }
+
+    .carousel-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-control {
+        padding: 10px 14px;
+        font-size: 1.2rem;
+    }
+
+    .carousel-control.prev {
+        left: 10px;
+    }
+
+    .carousel-control.next {
+        right: 10px;
+    }
+
+    .pastor .container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        max-width: 100%;
+    }
+    
+    .pastor-photo {
+        height: 250px;
+    }
+    
+    .pastor-text h2 {
+        text-align: center;
+        font-size: 1.5rem;
+    }
+    
+    .pastor-text p {
+        text-align: left;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .pastor h2 {
+        font-size: 1.5rem;
+    }
+}

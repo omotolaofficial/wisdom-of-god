@@ -1,0 +1,140 @@
+/**
+ * SERMONS PAGE STYLES
+ * ===================
+ * Styles for sermons.html page
+ * Includes: Video grid, audio sermons, sermon layout
+ */
+
+/*---Sermons Section---*/
+.sermons {
+    padding: 3rem 2rem;
+    background-color: #f9f9f9;
+}
+
+.video-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.video-grid iframe {
+    flex: 1;
+    min-width: 400px;
+    height: 250px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Horizontal arrangement for video sermons */
+#video-sermons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+#video-sermons article {
+    flex: 1 1 15%; /* ~4 per row */
+    min-width: 250px;
+}
+
+/* Horizontal arrangement for audio sermons */
+#audio-sermons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+#audio-sermons article {
+    flex: 1 1 22%; /* ~4 per row */
+    min-width: 250px;
+}
+
+/* Media players */
+video, audio {
+    display: block;
+    margin-top: 15px;
+    width: 100%;
+    border-radius: 6px;
+}
+
+/* Sermon filter buttons */
+.sermon-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.6rem 1.2rem;
+    border: 2px solid #5a6378;
+    background-color: white;
+    color: #5a6378;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background-color: #5a6378;
+    color: white;
+}
+
+/* Responsive layout */
+@media (max-width: 992px) {
+    #video-sermons article,
+    #audio-sermons article {
+        flex: 1 1 45%; /* 2 per row on tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    #video-sermons,
+    #audio-sermons {
+        flex-direction: column;
+    }
+    
+    #video-sermons article,
+    #audio-sermons article {
+        flex: 1 1 100%; /* stack on mobile */
+    }
+
+    .sermons {
+        padding: 2rem 1rem;
+    }
+
+    .video-grid {
+        flex-direction: column;
+    }
+
+    .video-grid iframe {
+        min-width: unset;
+        height: 200px;
+    }
+
+    .sermon-filters {
+        gap: 0.8rem;
+    }
+
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 600px) {
+    #video-sermons,
+    #audio-sermons {
+        flex-direction: column;
+    }
+    
+    #video-sermons article,
+    #audio-sermons article {
+        flex: 1 1 100%; /* stack on mobile */
+    }
+}

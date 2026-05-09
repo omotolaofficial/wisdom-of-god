@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspiration - Magazine</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/magazine.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Magazine Shared Styles */
+        .magazine-hero {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .magazine-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .magazine-hero p {
+            font-size: 1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Magazine Controls */
+        .magazine-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: white;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-magazine {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-magazine input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-magazine input:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        .filter-date select {
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-date select:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        /* Article Grid */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Article Card */
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-image i {
+            opacity: 0.8;
+        }
+
+        .article-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: #8faee8;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .article-author {
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .article-card h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .article-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #8faee8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 0.8rem;
+            color: #5a6378;
+        }
+
+        /* Article Modal */
+        .article-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .article-modal.show {
+            display: flex;
+        }
+
+        .modal-article-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-article {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-article:hover {
+            color: #333;
+        }
+
+        .modal-article-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-article-header h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .modal-article-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .modal-meta-item i {
+            color: #8faee8;
+            font-size: 1.1rem;
+        }
+
+        .modal-article-body {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .modal-article-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Featured Article */
+        .featured-article {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 1000px;
+        }
+
+        .featured-article-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .featured-article-image {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+        }
+
+        .featured-article-content {
+            padding: 2rem;
+        }
+
+        .featured-label {
+            color: #8faee8;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .featured-article-content h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .featured-article-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .featured-article-content p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .magazine-hero h1 {
+                font-size: 2rem;
+            }
+
+            .article-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-article-wrapper {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-article-content {
+                padding: 1.5rem;
+            }
+
+            .featured-article-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .magazine-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-magazine,
+            .filter-date {
+                width: 100%;
+            }
+
+            .modal-article-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                     <li><a href="#">Ministries</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#giving">Give</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Magazine Hero -->
+    <section class="magazine-hero">
+        <h1><i class="fas fa-lightbulb"></i> Inspiration Magazine</h1>
+        <p>Stories and insights to uplift your spirit and motivate you daily</p>
+    </section>
+
+    <!-- Featured Article -->
+    <section class="container">
+        <div class="featured-article">
+            <div class="featured-article-wrapper">
+                <div class="featured-article-image">
+                    <i class="fas fa-sunrise"></i>
+                </div>
+                <div class="featured-article-content">
+                    <div class="featured-label">Featured This Month</div>
+                    <h2>From Struggle to Success: A Journey of Faith</h2>
+                    <div class="featured-article-meta">
+                        <span class="modal-meta-item">
+                            <i class="fas fa-calendar"></i> March 20, 2025
+                        </span>
+                        <span class="modal-meta-item">
+                            <i class="fas fa-user"></i> Mr. Solomon Ekpo
+                        </span>
+                    </div>
+                    <p>A powerful testimony of how faith in God transformed a life of hardship into a story of triumph and blessing.</p>
+                    <a href="#" class="read-more" onclick="openArticle(0)">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Magazine Controls -->
+    <div class="magazine-controls">
+        <div class="search-magazine">
+            <input type="text" id="searchArticles" placeholder="Search articles by title...">
+        </div>
+        <div class="filter-date">
+            <select id="filterMonth">
+                <option value="">All Articles</option>
+                <option value="2025-03">March 2025</option>
+                <option value="2025-02">February 2025</option>
+                <option value="2025-01">January 2025</option>
+                <option value="2024-12">December 2024</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Article Grid -->
+    <div class="article-grid" id="articleGrid"></div>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="article-modal">
+        <div class="modal-article-content">
+            <span class="close-article" onclick="closeArticle()">&times;</span>
+            <div class="modal-article-header">
+                <h2 id="modalTitle"></h2>
+                <div class="modal-article-meta">
+                    <span class="modal-meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span id="modalDate"></span>
+                    </span>
+                    <span class="modal-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span id="modalAuthor"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-article-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: #5a6378; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <p>&copy; 2025 RCCG Wisdom of Parish. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample Articles Data - DEVELOPER: Add/Edit articles here with dates
+        const articlesData = [
+            {
+                id: 0,
+                title: "From Struggle to Success: A Journey of Faith",
+                author: "Mr. Solomon Ekpo",
+                date: "2025-03-20",
+                description: "A powerful testimony of how faith in God transformed a life of hardship into triumph.",
+                content: "I was born into a poor family in a small village. My parents worked hard, but money was always tight. School was a luxury we couldn't always afford. By the time I was sixteen, I had dropped out of school to help my family survive.\n\nEverywhere I looked, I saw poverty, hopelessness, and despair. I began to question God. If He was good, why was life so hard? Why were some people rich while we struggled to eat?\n\nThen one day, a missionary came to our village and shared the Gospel. I learned that God loved me, that Jesus died for me, and that I could have a relationship with God. I made the decision to follow Christ.\n\nSomething changed inside me. Instead of focusing on my circumstances, I focused on possibilities. I realized that God had given me a mind and abilities. I started teaching other children in the village, and someone noticed my gift for teaching.\n\nA charitable organization offered me a scholarship to go back to school. I studied hard, earned good grades, and eventually got a job that allowed me to support my family.\n\nTo day, I'm a teacher, and I use my education to help other children escape the cycle of poverty. I've also been able to help my family build a better life.\n\nBut the greatest victory isn't financial success. It's knowing that my life has purpose, that I'm making a difference, and that I'm serving God. Faith didn't remove my challenges, but it gave me the strength and wisdom to overcome them.",
+                icon: "fas fa-sunrise"
+            },
+            {
+                id: 1,
+                title: "Small Acts of Kindness, Big Impact",
+                author: "Sister Chioma Okonkwo",
+                date: "2025-03-08",
+                description: "How ordinary acts of love and kindness change lives and communities.",
+                content: "I used to think that making a difference required doing something big and dramatic. But I've learned that the greatest impact often comes from small acts of kindness done consistently.\n\nIt started when I noticed a widow who lived next door. She was old, struggling, and always seemed sad. I started bringing her meals a few times a week. Nothing fancy—just what I cooked for my family.\n\nOne day, she broke down in tears and told me that she had started to give up on life. She felt like a burden. But my small gestures of kindness had shown her that someone cared, that her life mattered.\n\nNow, years later, she's still here. She often sits with me, sharing stories and wisdom. I've given her so much— time, meals, companionship. But she's given me even more: perspective, meaning, and the lived experience of how much a single act can matter.\n\nThis taught me that I don't need to be a celebrity or have lots of money to make a difference. I can:\n\n- Listen to someone who needs to talk\n- Help someone carry their groceries\n- Smile at a stranger\n- Send an encouraging message\n- Volunteer a few hours\n- Donate to a cause I believe in\n\nThese small things add up. They create a ripple effect of kindness in the world.",
+                icon: "fas fa-hands-helping"
+            },
+            {
+                id: 2,
+                title: "Overcoming Fear Through Faith",
+                author: "Pastor Michael Obi",
+                date: "2025-02-20",
+                description: "Biblical wisdom on how to overcome fear and live boldly in faith.",
+                content: "Fear is one of the most powerful human emotions. It can paralyze us, prevent us from pursuing our dreams, and rob us of joy.\n\nBut the Bible has much to say about fear. 2 Timothy 1:7 says, 'For the spirit God gave us does not make us timid, but gives us power, love and self-discipline.'\n\nGod hasn't called us to be controlled by fear. He's called us to boldness, courage, and faith.\n\nHow do we overcome fear?\n\n1. Acknowledge the fear. Don't pretend it doesn't exist. Fear is real, and acknowledging it is the first step to overcoming it.\n\n2. Remember who God is. God is all-powerful, all-knowing, and perfectly loving. Whatever we face, God is bigger.\n\n3. Take action. Fear often diminishes when we take action, even small steps. Don't wait for the fear to disappear before you move.\n\n4. Seek support. Share your fears with people you trust. Prayer and encouragement from others can help sustain you.\n\n5. Practice faith. Faith isn't the absence of fear. It's trusting God in spite of the fear.\n\nThere was a time when I was terrified to preach in front of large crowds. But God called me to ministry. I had to choose: let fear stop me, or let faith move me forward. I chose faith, and though I still feel nervous sometimes, I've discovered that God is faithful. He gives me the words to speak and the courage to speak them.\n\nYou can do the same. Whatever you fear, remember that God is with you.",
+                icon: "fas fa-heart-circle"
+            },
+            {
+                id: 3,
+                title: "Finding Your Why: Living a Meaningful Life",
+                author: "Dr. Adekunle Adeyemi",
+                date: "2025-02-10",
+                description: "Discover your purpose and learn how to live a life of meaning and intention.",
+                content: "Many of us go through life without ever asking the fundamental question: Why am I here? What's the point?\n\nWithout a sense of purpose or \"why,\" life can feel empty and meaningless, even if we have material success.\n\nFinding your \"why\" is about understanding:\n\n1. What you care about deeply. What issues move you? What would you do if money wasn't a concern?\n\n2. What you're good at. What are your talents? How can they serve others?\n\n3. What the world needs. Where is your passion intersecting with a need in the world?\n\nYour \"why\" doesn't have to be grandiose. It might be that you want to be a good parent, a faithful friend, a dedicated teacher, or a healer of the sick. The key is that it's meaningful to you.\n\nOnce you identify your \"why,\" everything becomes clearer. Your decisions align with your purpose. You have motivation even when things are difficult. Your life has direction and meaning.\n\nFor me, my \"why\" is to help others live healthy, purposeful lives. This informs every decision I make about my career, my time, and my energy. When I'm not aligned with this purpose, I feel unfulfilled. When I am, I feel alive.\n\nWhat's your \"why\"? Take time to reflect on this question. Write it down. Live into it. Your life will be richer for it.",
+                icon: "fas fa-compass"
+            },
+            {
+                id: 4,
+                title: "The Power of Forgiveness",
+                author: "Reverend Grace Samuel",
+                date: "2025-01-25",
+                description: "How forgiveness heals wounds and transforms relationships.",
+                content: "Forgiveness is one of the most powerful and most misunderstood concepts in Christianity. Many people think it means excusing someone's wrongdoing or pretending it didn't hurt.\n\nIt doesn't. Forgiveness is choosing to let go of resentment and the desire for revenge. It's freeing yourself from the prison of bitterness.\n\nJesus taught us this clearly. In Matthew 18:21-22, Peter asked Jesus how many times we should forgive someone. 'Seven times?' Jesus replied, 'I tell you, not seven times, but seventy-seven times.' In other words, forgiveness should be unlimited.\n\nWhy forgiveness matters:\n\n1. It frees you. Holding onto bitterness is like drinking poison and expecting the other person to die. Forgiveness releases you from this burden.\n\n2. It heals relationships. Forgiveness opens the door for reconciliation and restoration.\n\n3. It reflects God's character. God forgives us through Christ. As we forgive others, we reflect His grace.\n\n4. It's biblically commanded. Ephesians 4:32 says, 'Be kind and compassionate to one another, forgiving each other, just as in Christ God forgave you.'\n\nBut forgiveness can be difficult, especially when the hurt is deep. If you struggle with forgiveness, start with small things. Practice forgiving minor offenses. Pray for the person who hurt you. Seek counseling if needed.\n\nRemember, forgiveness is for you. Give yourself the gift of letting go.",
+                icon: "fas fa-peace"
+            },
+            {
+                id: 5,
+                title: "Grace in the Midst of Loss",
+                author: "Sister Ngozi Umeh",
+                date: "2025-01-10",
+                description: "Finding hope and God's comfort during times of grief and loss.",
+                content: "Loss is something every person experiences. Whether it's the loss of a loved one, a job, dreams, or health, grief is part of the human experience.\n\nWhen we experience loss, many of us feel anger, confusion, and darkness. We wonder where God is. We question why He would allow this pain.\n\nBut the Bible shows us that God is present in our grief. In John 11:35, we see the shortest verse in the Bible: 'Jesus wept.' Jesus wept over the death of His friend Lazarus. Jesus, God in human form, experienced the pain of loss.\n\nThis tells us that God understands our grief. He doesn't expect us to be stoic or unaffected by loss.\n\nWhen you experience loss:\n\n1. Allow yourself to grieve. Feel what you feel. Cry, be angry, be confused. This is a natural part of the healing process.\n\n2. Reach out for support. Don't isolate yourself. Talk to friends, family, or a counselor. Join a support group. Connect with others who have experienced similar loss.\n\n3. Trust God's goodness. Even though things are painful, God hasn't abandoned you. He's walking with you through the darkness.\n\n4. Find meaning. Sometimes through loss, we discover what truly matters. We grow, we become more compassionate, we draw closer to God.\n\n5. Hope is not lost. 1 Thessalonians 4:13 says, 'Brothers and sisters, we do not want you to be uninformed about those who have died, so that you do not grieve like the rest of mankind, who have no hope.'\n\nGod offers us hope even in the midst of loss. This hope doesn't erase the pain, but it sustains us through it.",
+                icon: "fas fa-dove"
+            }
+        ];
+
+        // Render Articles
+        function renderArticles(articles) {
+            const grid = document.getElementById('articleGrid');
+            
+            if (articles.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="fas fa-inbox"></i><p>No articles found</p></div>';
+                return;
+            }
+
+            grid.innerHTML = articles.map((article, index) => `
+                <div class="article-card" data-date="${article.date}">
+                    <div class="article-image">
+                        <i class="${article.icon}"></i>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${formatDate(article.date)}
+                            </span>
+                        </div>
+                        <h3>${article.title}</h3>
+                        <div class="article-author">
+                            <i class="fas fa-user-circle"></i>
+                            ${article.author}
+                        </div>
+                        <p class="article-description">${article.description}</p>
+                        <a href="#" class="read-more" onclick="openArticle(${article.id})">
+                            Read Full Article <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Format Date
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateStr).toLocaleDateString('en-US', options);
+        }
+
+        // Open Article Modal
+        function openArticle(id) {
+            const article = articlesData[id];
+            document.getElementById('modalTitle').textContent = article.title;
+            document.getElementById('modalDate').textContent = formatDate(article.date);
+            document.getElementById('modalAuthor').textContent = article.author;
+            document.getElementById('modalBody').innerHTML = article.content.split('\n').map(p => `<p>${p}</p>`).join('');
+            document.getElementById('articleModal').classList.add('show');
+        }
+
+        // Close Article Modal
+        function closeArticle() {
+            document.getElementById('articleModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('articleModal');
+            if (event.target == modal) {
+                closeArticle();
+            }
+        }
+
+        // Search Articles
+        document.getElementById('searchArticles').addEventListener('keyup', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const month = document.getElementById('filterMonth').value;
+            
+            let filtered = articlesData.filter(article => {
+                const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                                     article.author.toLowerCase().includes(searchTerm);
+                const matchesMonth = !month || article.date.startsWith(month);
+                return matchesSearch && matchesMonth;
+            });
+            
+            renderArticles(filtered);
+        });
+
+        // Filter by Date
+        document.getElementById('filterMonth').addEventListener('change', function(e) {
+            const month = e.target.value;
+            const searchTerm = document.getElementById('searchArticles').value.toLowerCase();
+            
+            let filtered = articlesData.filter(article => {
+                const matchesMonth = !month || article.date.startsWith(month);
+                const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                                     article.author.toLowerCase().includes(searchTerm);
+                return matchesMonth && matchesSearch;
+            });
+            
+            renderArticles(filtered);
+        });
+
+        // Initialize - render all articles from magazine manager
+        const articles = magazineManager.getArticles('inspiration');
+        renderArticles(articles);
+    </script>
+
+    <!-- Admin Link -->
+    <a href="magazine-admin.html" class="admin-link" title="Manage Articles">
+        <i class="fas fa-cog"></i>
+    </a>
+
+    <style>
+        .admin-link {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #5a6378;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .admin-link:hover {
+            background: #8faee8;
+            transform: scale(1.1);
+        }
+        @media (max-width: 768px) {
+            .admin-link {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+
+    <!-- External JavaScript Files -->
+    <script src="js/magazine-admin.js"></script>
+    <script src="js/global.js"></script>
+</body>
+</html>

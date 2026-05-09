@@ -1,0 +1,195 @@
+/**
+ * GIVING PAGE STYLES
+ * ==================
+ * Styles for giving.html page
+ * Includes: Donation form, giving information, amounts
+ */
+
+/* Online Giving Section */
+.giving {
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+    color: white;
+}
+
+.giving-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.giving h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.giving-subtitle {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+    font-weight: 300;
+}
+
+.giving-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.giving-info {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.giving-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.giving-reasons {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.giving-reasons li {
+    padding: 0.8rem 0;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.giving-reasons li:last-child {
+    border-bottom: none;
+}
+
+.giving-note {
+    font-size: 0.95rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    opacity: 0.9;
+}
+
+.giving-form-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.giving-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.giving-form .form-group {
+    margin-bottom: 0;
+}
+
+.giving-form label {
+    color: #333;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
+}
+
+.giving-form select,
+.giving-form input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease;
+}
+
+.giving-form select:focus,
+.giving-form input:focus {
+    outline: none;
+    border-color: #5a6378;
+    box-shadow: 0 0 0 3px rgba(90, 99, 120, 0.1);
+}
+
+.amount-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+}
+
+.amount-btn {
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    background-color: white;
+    color: #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.amount-btn:hover {
+    border-color: #5a6378;
+    background-color: #f0f0f0;
+}
+
+.amount-btn.active {
+    background-color: #5a6378;
+    color: white;
+    border-color: #5a6378;
+}
+
+.give-btn {
+    background-color: #5a6378;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.give-btn:hover {
+    background-color: #8faee8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(90, 99, 120, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .giving {
+        padding: 2rem 1rem;
+    }
+
+    .giving h2 {
+        font-size: 1.8rem;
+    }
+
+    .giving-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .amount-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .giving-form-container {
+        padding: 1.5rem;
+    }
+
+    .giving-info {
+        padding: 1.5rem;
+    }
+}

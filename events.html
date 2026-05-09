@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - RCCG Wisdom of Parish</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/events.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/events-manager.js"></script>
+    <style>
+        /* Events Page Specific Styles */
+        .events-hero {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            padding: 6rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .events-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .events-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .events-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Filter Tabs */
+        .event-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            padding: 0 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            background: white;
+            border: 2px solid #8faee8;
+            color: #5a6378;
+            cursor: pointer;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #8faee8;
+            color: white;
+            border-color: #5a6378;
+            transform: translateY(-2px);
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            max-width: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Event Card */
+        .event-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            z-index: 3;
+            text-transform: uppercase;
+        }
+
+        .event-badge.featured {
+            background: #ff9ff3;
+        }
+
+        .event-badge.upcoming {
+            background: #4ecdc4;
+        }
+
+        .event-badge.special {
+            background: #ffd93d;
+            color: #333;
+        }
+
+        .event-badge.birthday {
+            background: #ff6b9d;
+        }
+
+        .event-content {
+            padding: 1.8rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item i {
+            color: #8faee8;
+            font-size: 1rem;
+        }
+
+        .event-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        .event-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
+        }
+
+        .event-details {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-row i {
+            color: #8faee8;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+            min-width: 80px;
+        }
+
+        .detail-value {
+            color: #555;
+        }
+
+        .event-footer {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .event-cta {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            text-align: center;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .event-cta.primary {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+        }
+
+        .event-cta.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(90, 99, 120, 0.3);
+        }
+
+        .event-cta.secondary {
+            background: white;
+            color: #8faee8;
+            border: 2px solid #8faee8;
+        }
+
+        .event-cta.secondary:hover {
+            background: #f9f9f9;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Newsletter Subscribe */
+        .event-subscribe {
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .event-subscribe-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .event-subscribe h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-subscribe p {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .subscribe-form {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .subscribe-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .subscribe-form button {
+            padding: 1rem 2rem;
+            background: white;
+            color: #8faee8;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .subscribe-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .events-hero h1 {
+                font-size: 2rem;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 1rem;
+            }
+
+            .event-image {
+                height: 220px;
+            }
+
+            .subscribe-form {
+                flex-direction: column;
+            }
+
+            .subscribe-form input,
+            .subscribe-form button {
+                width: 100%;
+            }
+
+            .calendar-section {
+                padding: 2rem 1rem;
+            }
+
+            .date-cell {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                    <li><a href="ministries.html">Ministries</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="giving.html">Give</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Events Hero Section -->
+    <section class="events-hero">
+        <h1><i class="fas fa-calendar-days"></i> Church Events</h1>
+        <p>Join us for inspiring worship services, community outreach, and fellowship. Check our calendar and register for upcoming events.</p>
+    </section>
+
+    <!-- Filter Buttons -->
+    <div class="event-filters">
+        <button class="filter-btn active" onclick="filterEvents('all')">All Events</button>
+        <button class="filter-btn" onclick="filterEvents('worship')">Worship</button>
+        <button class="filter-btn" onclick="filterEvents('community')">Community</button>
+        <button class="filter-btn" onclick="filterEvents('fellowship')">Fellowship</button>
+        <button class="filter-btn" onclick="filterEvents('birthday')">Birthdays</button>
+    </div>
+
+    <!-- Events Grid -->
+    <section class="events-grid" id="eventsGrid">
+        <div class="empty-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading events...</p>
+        </div>
+    </section>
+        <!-- Atmosphere of Praise -->
+        <div class="event-card" data-category="worship">
+            <div class="event-image">
+                <img src="./images/aop.jpg" alt="Atmosphere of Praise">
+                <div class="event-badge featured">FEATURED</div>
+            </div>
+            <div class="event-content">
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>March 18, 2026</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>6:00 PM</span>
+                    </div>
+                </div>
+                <h3 class="event-title">Atmosphere of Praise</h3>
+                <p class="event-description">An evening of powerful worship and praise! Join us as we lift our voices in adoration to our King. Experience the presence of God through contemporary songs, traditional hymns, and a time of intimate worship.</p>
+                <div class="event-details">
+                    <div class="detail-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">Main Sanctuary</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <span class="detail-label">Expected:</span>
+                            <span class="detail-value">500+ attendees</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-tag"></i>
+                        <div>
+                            <span class="detail-label">Category:</span>
+                            <span class="detail-value">Worship Event</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <a href="#" class="event-cta primary">Register Now</a>
+                    <a href="#" class="event-cta secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Light Up Abuja -->
+        <div class="event-card" data-category="community">
+            <div class="event-image">
+                <img src="./images/light up abuja.jpeg" alt="Light Up Abuja">
+                <div class="event-badge upcoming">UPCOMING</div>
+            </div>
+            <div class="event-content">
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>March 20, 2026</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>5:00 PM</span>
+                    </div>
+                </div>
+                <h3 class="event-title">Light Up Abuja</h3>
+                <p class="event-description">A community outreach event where we shine the light of Christ throughout Abuja. Join us as we conduct evangelism, distribute care packages, and minister to communities in need. Be part of spreading God's love!</p>
+                <div class="event-details">
+                    <div class="detail-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">Various Communities</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <span class="detail-label">Expected:</span>
+                            <span class="detail-value">200+ volunteers</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-tag"></i>
+                        <div>
+                            <span class="detail-label">Category:</span>
+                            <span class="detail-value">Community Outreach</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <a href="#" class="event-cta primary">Register Now</a>
+                    <a href="#" class="event-cta secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sunday Worship Service -->
+        <div class="event-card" data-category="worship">
+            <div class="event-image">
+                <i class="fas fa-praying-hands"></i>
+            </div>
+            <div class="event-content">
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Every Sunday</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>9:00 AM - 11:30 AM</span>
+                    </div>
+                </div>
+                <h3 class="event-title">Sunday Worship Service</h3>
+                <p class="event-description">Begin your week with us in worship. Join our vibrant congregation as we worship the Lord, hear from God's Word, and fellowship with believers. All are welcome!</p>
+                <div class="event-details">
+                    <div class="detail-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">Main Sanctuary</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <span class="detail-label">Expected:</span>
+                            <span class="detail-value">1000+ attendees</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-tag"></i>
+                        <div>
+                            <span class="detail-label">Category:</span>
+                            <span class="detail-value">Regular Worship</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <a href="#" class="event-cta primary">Join Us</a>
+                    <a href="#" class="event-cta secondary">Directions</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Digging Deep - Bible Study -->
+        <div class="event-card" data-category="fellowship">
+            <div class="event-image">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="event-content">
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Every Tuesday</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>6:00 PM</span>
+                    </div>
+                </div>
+                <h3 class="event-title">Digging Deep Bible Study</h3>
+                <p class="event-description">A weekly opportunity to deepen your understanding of Scripture. We dig into God's Word together, study biblical truths, and grow in our knowledge of the Lord. Come prepared to learn and share!</p>
+                <div class="event-details">
+                    <div class="detail-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">Fellowship Centre</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <span class="detail-label">Expected:</span>
+                            <span class="detail-value">50-100 attendees</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-tag"></i>
+                        <div>
+                            <span class="detail-label">Category:</span>
+                            <span class="detail-value">Bible Study</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <a href="#" class="event-cta primary">Register</a>
+                    <a href="#" class="event-cta secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Faith Clinic -->
+        <div class="event-card" data-category="fellowship">
+            <div class="event-image">
+                <i class="fas fa-cross"></i>
+            </div>
+            <div class="event-content">
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Every Friday</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>6:00 PM</span>
+                    </div>
+                </div>
+                <h3 class="event-title">Faith Clinic</h3>
+                <p class="event-description">A time of healing, prayer, and restoration. We address life's challenges through faith and the power of God's Word. Come bring your burdens and leave with hope and encouragement!</p>
+                <div class="event-details">
+                    <div class="detail-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">Main Sanctuary</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <span class="detail-label">Expected:</span>
+                            <span class="detail-value">200+ attendees</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-tag"></i>
+                        <div>
+                            <span class="detail-label">Category:</span>
+                            <span class="detail-value">Prayer Meeting</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <a href="#" class="event-cta primary">Register</a>
+                    <a href="#" class="event-cta secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thanksgiving Service -->
+        <div class="event-card" data-category="worship">
+            <div class="event-image">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="event-content">
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>April 15, 2026</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>10:00 AM</span>
+                    </div>
+                </div>
+                <h3 class="event-title">Thanksgiving Service</h3>
+                <p class="event-description">A special service to thank God for His blessings, protection, and guidance. Join us for prayer, music, testimonies, and a time of corporate thanksgiving. Bring your gratitude and your family!</p>
+                <div class="event-details">
+                    <div class="detail-row">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">Main Sanctuary</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <span class="detail-label">Expected:</span>
+                            <span class="detail-value">800+ attendees</span>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fas fa-tag"></i>
+                        <div>
+                            <span class="detail-label">Category:</span>
+                            <span class="detail-value">Celebration Service</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="event-footer">
+                    <a href="#" class="event-cta primary">Register Now</a>
+                    <a href="#" class="event-cta secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <!-- Removed - now events are shown in main grid, updated via EventsManager -->
+
+    <!-- Newsletter Subscribe -->
+    <section class="event-subscribe">
+        <div class="event-subscribe-content">
+            <h2><i class="fas fa-bell"></i> Stay Updated</h2>
+            <p>Don't miss any of our upcoming events. Subscribe to our newsletter and receive updates about our latest activities and news.</p>
+            <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="./images/Rccg_logo.png" alt="RCCG Wisdom of Parish Logo" />
+                    <h3>RCCG Wisdom of Parish</h3>
+                </div>
+                <p>Building a community of faith, worship, and service in the love of Christ.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermons</a></li>
+                    <li><a href="ministries.html">Ministries</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="giving.html">Giving</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank" title="Facebook" class="social-icon">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </a>
+                    <a href="https://twitter.com" target="_blank" title="Twitter" class="social-icon">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href="https://instagram.com" target="_blank" title="Instagram" class="social-icon">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://youtube.com" target="_blank" title="YouTube" class="social-icon">
+                        <i class="fab fa-youtube"></i> YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Service Times</h4>
+                <ul class="footer-times">
+                    <li><strong>Sunday:</strong> 9:00 AM - 11:30 AM</li>
+                    <li><strong>Tuesday:</strong> 6:00 PM (Digging Deep)</li>
+                    <li><strong>Friday:</strong> 6:00 PM (Faith Clinic)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 RCCG Wisdom of Parish. All rights reserved.</p>
+            <p>Serving in Faith | Growing in Grace | Sharing God's Love</p>
+        </div>
+    </footer>
+
+    <script>
+        // Render events from EventsManager
+        function renderEvents(events) {
+            const grid = document.getElementById('eventsGrid');
+            
+            if (!events || events.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No events found</p></div>';
+                return;
+            }
+
+            let html = '';
+            events.forEach(event => {
+                const imageHtml = event.image ? 
+                    `<img src="${event.image}" alt="${event.title}">` : 
+                    `<i class="${event.icon || 'fas fa-calendar'}"></i>`;
+                
+                const badgeHtml = event.badge ? 
+                    `<div class="event-badge ${event.badge}">${event.badge.toUpperCase()}</div>` : 
+                    '';
+
+                const dateDisplay = EventsManager.formatDate(event.date, event.recurring);
+                const timeDisplay = EventsManager.formatTime(event.time);
+
+                html += `
+                    <div class="event-card" data-category="${event.category}">
+                        <div class="event-image">
+                            ${imageHtml}
+                            ${badgeHtml}
+                        </div>
+                        <div class="event-content">
+                            <div class="event-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>${dateDisplay}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${timeDisplay}</span>
+                                </div>
+                            </div>
+                            <h3 class="event-title">${event.title}</h3>
+                            <p class="event-description">${event.description}</p>
+                            <div class="event-details">
+                                <div class="detail-row">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <div>
+                                        <span class="detail-label">Location:</span>
+                                        <span class="detail-value">${event.location}</span>
+                                    </div>
+                                </div>
+                                ${event.attendees ? `
+                                <div class="detail-row">
+                                    <i class="fas fa-users"></i>
+                                    <div>
+                                        <span class="detail-label">Expected:</span>
+                                        <span class="detail-value">${event.attendees}+ attendees</span>
+                                    </div>
+                                </div>
+                                ` : ''}
+                                <div class="detail-row">
+                                    <i class="fas fa-tag"></i>
+                                    <div>
+                                        <span class="detail-label">Category:</span>
+                                        <span class="detail-value">${event.category.charAt(0).toUpperCase() + event.category.slice(1)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="event-footer">
+                                <a href="#" class="event-cta primary" onclick="handleRegister(event, '${event.title}')">Register Now</a>
+                                <a href="#" class="event-cta secondary" onclick="handleLearnMore(event, '${event.title}')">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // Filter events by category
+        function filterEvents(category) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const events = category === 'all' ? 
+                EventsManager.getAll() : 
+                EventsManager.getByCategory(category);
+            
+            renderEvents(events);
+        }
+
+        // Handle registration
+        function handleRegister(e, eventTitle) {
+            e.preventDefault();
+            alert(`Thanks for your interest in "${eventTitle}"! Registration form is coming soon.`);
+        }
+
+        // Handle learn more
+        function handleLearnMore(e, eventTitle) {
+            e.preventDefault();
+            alert(`Get in touch with our office for more details about "${eventTitle}".`);
+        }
+
+        // Newsletter subscription
+        function handleSubscribe(e) {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            alert('Thank you for subscribing to our event updates! Check your email for confirmation.');
+            e.target.reset();
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            const events = EventsManager.getAll();
+            renderEvents(events);
+        });
+    </script>
+
+    <!-- External JavaScript Files -->
+    <script src="js/global.js"></script>
+</body>
+</html>

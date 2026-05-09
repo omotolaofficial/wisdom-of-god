@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wisdom-of-God</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                    <li><a href="ministries.html">Ministries</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="giving.html">Give</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!----hero section-->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Welcome to Our Church</h1>
+            <p>Join us for worship, community, and spiritual growth.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn">Plan Your Visit</a>
+                <a href="sermons.html" class="btn outline">Watch Sermons</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auto-playing Image Carousel -->
+    <section class="carousel-section">
+        <h2>Our Activities</h2>
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel">
+                    <img src="./images/realchil.jpg" alt="Children Ministry" class="carousel-slide">
+                    <img src="./images/youth1.jpg" alt="Youth Ministry" class="carousel-slide">
+                    <img src="./images/men.jpg" alt="Men Fellowship" class="carousel-slide">
+                    <img src="./images/realwoomen.jpg" alt="Women Fellowship" class="carousel-slide">
+                    <img src="./images/choir6.jpg" alt="Choir" class="carousel-slide">
+                    <img src="./images/churchcong.jpg" alt="Church Congregation" class="carousel-slide">
+                    <img src="./images/ephchild.jpg" alt="Children Activity" class="carousel-slide">
+                    <img src="./images/cchoir.jpg" alt="Choir Performance" class="carousel-slide">
+                    <img src="./images/choir2.jpg" alt="Choir" class="carousel-slide">
+                    <img src="./images/kk@60.jpg" alt="Church Event" class="carousel-slide">
+                </div>
+            </div>
+            <button class="carousel-control prev" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="carousel-control next" onclick="changeSlide(1)">&#10095;</button>
+            <div class="carousel-indicators">
+                <span class="indicator" onclick="currentSlide(0)"></span>
+                <span class="indicator" onclick="currentSlide(1)"></span>
+                <span class="indicator" onclick="currentSlide(2)"></span>
+                <span class="indicator" onclick="currentSlide(3)"></span>
+                <span class="indicator" onclick="currentSlide(4)"></span>
+                <span class="indicator" onclick="currentSlide(5)"></span>
+                <span class="indicator" onclick="currentSlide(6)"></span>
+                <span class="indicator" onclick="currentSlide(7)"></span>
+                <span class="indicator" onclick="currentSlide(8)"></span>
+                <span class="indicator" onclick="currentSlide(9)"></span>
+            </div>
+        </div>
+    </section>
+
+    <!---service times-->
+     <section class="service-times" id="services">
+        <h2>Service Times</h2>
+        <div class="cards">
+            <div class="card">
+                <h3>Sunday Worship Service</h3>
+                <p>9:00 AM &ndash; 11:30 AM</p>
+            </div>
+            <div class="card">
+                <h3>Digging Deep</h3>
+                <p>Tuesday 6:00 PM</p>
+            </div>
+            <div class="card">
+                <h3>Faith Clinic</h3>
+                <p>Friday 6:00 PM</p>
+            </div>
+        </div>
+    </section>
+    <br />    
+    
+    <!-- about preview -->
+    <section class="about-preview" id="about">
+        <div class="container">
+            <h2>About Our Church</h2>
+            <p>We are a welcoming Church dedicated to worshiping God and serving others. </p>
+           <p>Learn more about our mission and history.
+            <a href="about.html" class="btn">Learn More</a></p>
+        </div>
+    </section>
+
+    <!-- ministries section -->
+    <section class="ministries" id="ministries">
+        <h2>Our Ministries</h2>
+        <div class="cards">
+            <div class="card">
+                <img src="./images/realchil.jpg" alt="Children Ministry" />
+                <h3>Children Ministry</h3>
+            </div>
+            <div class="card">
+                <img src="./images/youth1.jpg" alt="Youth Ministry" />
+                <h3>Youth Ministry</h3>
+            </div>
+            <div class="card">
+                <img src="images/men.jpg" alt="Men Fellowship" />
+                <h3>Men Fellowship</h3>
+            </div>
+            <div class="card">
+                <img src="./images/realwoomen.jpg" alt="Women Fellowship" />
+                <h3>Women Fellowship</h3>
+            </div>
+            <div class="card">
+                <img src="./images/choir6.jpg" alt="Choir" />
+                <h3>Choir</h3>
+            </div>
+        </div>
+    </section>
+
+<!-- sermons embed -->
+ <section class="sermons" id="sermons">
+        <h2>Recent Sermons</h2>
+        <div class="video-grid">
+            <iframe src="https://www.youtube.com/embed/y9qycXXtNiA" title="Sermon 1" allowfullscreen></iframe>
+           
+           <iframe width="560" height="315" 
+            src="https://www.youtube.com/embed/kctKM2ZCz2E?si=J7SutzK40N9xfGTT" 
+            title="YouTube video player" frameborder="0" allow="accelerometer; 
+            autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!------events---->
+    <section class="upcome" id="upcoming">
+        <h2>Upcoming Events</h2>
+        <div class="cards">
+            <div class="card">
+                <img src="./images/aop.jpg" alt="Atmosphere of Praise">
+                <h3>Atmosphere of Praise</h3>
+                <p>March 18, 2026</p>
+            </div>
+            <div class="card">
+                <img src="./images/light up abuja.jpeg" alt="Light Up Abuja">
+                <h3>Light Up Abuja</h3>
+                <p>March 20, 2026</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- online giving section -->
+    <section class="giving" id="giving">
+        <div class="giving-container">
+            <h2>Online Giving</h2>
+            <p class="giving-subtitle">Support Our Ministry & Mission Through Your Generous Giving</p>
+            <div class="giving-content">
+                <div class="giving-info">
+                    <h3>Why Give?</h3>
+                    <ul class="giving-reasons">
+                        <li>📖 Support our ministry programs</li>
+                        <li>🙏 Help us reach more souls for Christ</li>
+                        <li>🏫 Fund community outreach initiatives</li>
+                        <li>💪 Strengthen our church operations</li>
+                        <li>✨ Be part of God's work</li>
+                    </ul>
+                    <p class="giving-note">Your contribution is secure and goes directly to supporting our church mission.</p>
+                </div>
+                
+                <div class="giving-form-container">
+                    <form class="giving-form" id="givingForm">
+                        <div class="form-group">
+                            <label>Select Giving Purpose:</label>
+                            <select name="purpose" required>
+                                <option value="">-- Choose Purpose --</option>
+                                <option value="general">General Offering</option>
+                                <option value="ministry">Ministry Support</option>
+                                <option value="missions">Missions</option>
+                                <option value="building">Building Fund</option>
+                                <option value="outreach">Community Outreach</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Select Amount:</label>
+                            <div class="amount-options">
+                                <button type="button" class="amount-btn" data-amount="5000" onclick="setAmount(5000)">₦5,000</button>
+                                <button type="button" class="amount-btn" data-amount="10000" onclick="setAmount(10000)">₦10,000</button>
+                                <button type="button" class="amount-btn" data-amount="25000" onclick="setAmount(25000)">₦25,000</button>
+                                <button type="button" class="amount-btn" data-amount="50000" onclick="setAmount(50000)">₦50,000</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customAmount">Or Enter Custom Amount (₦):</label>
+                            <input type="number" id="customAmount" name="customAmount" placeholder="Enter amount" min="100" step="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="donorName">Your Name (Optional):</label>
+                            <input type="text" id="donorName" name="donorName" placeholder="Your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="donorEmail">Your Email (Optional):</label>
+                            <input type="email" id="donorEmail" name="donorEmail" placeholder="Your email address">
+                        </div>
+
+                        <button type="submit" class="give-btn">Proceed to Donation</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- pastor section -->
+    <section class="pastor" id="pastor">
+        <h2>Pastor's Welcome</h2>
+        <div class="container">
+            <img src="./images/frontendpast.jpg" alt="Pastor Kunle Kunbi" class="pastor-photo" />
+            <div class="pastor-text">
+                <p>Welcome to Our Church Family.<br><br>
+Dear Beloved in Christ,<br><br>
+Grace and peace to you in the name of our Lord and Savior, Jesus Christ. On behalf of our entire congregation, I joyfully welcome you to our church. Whether you are a longtime member, a first-time visitor, or simply exploring, we are delighted that you are here.<br><br>
+My prayer is that this space will be more than just a site; it will be a doorway into fellowship, encouragement, and spiritual growth. Here you will find resources to strengthen your faith, opportunities to connect with others, and updates on how God is moving in our midst.<br><br>
+We believe that the church is not just a building, but a family united in love, worship, and service. As you browse, may you sense the warmth of our community and the presence of the Holy Spirit guiding you.<br><br>
+We invite you to join us in worship, in prayer, and in service, as together we seek to glorify God and share His love with the world.<br><br>
+Welcome, and may the Lord bless you richly.
+Yours in Christ,<br>
+<strong>Pastor Kunle Kunbi</strong>
+</p>
+    </div>
+        </div>
+    </section>
+<!-- prayer request -->
+    <section class="prayer" id="prayer">
+        <h2>Prayer Request</h2>
+        <form id="prayerForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required />
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required />
+            </div>
+            <div class="form-group">
+                <label for="request">Prayer Request</label>
+                <textarea id="request" name="request" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+    </section>
+
+    <!-- Admin Panel Access -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 100; display: flex; gap: 1rem; flex-direction: column;">
+        <div style="position: relative;">
+            <button id="adminMenuBtn" onclick="toggleAdminMenu()" title="Admin Panels" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 60px;
+                height: 60px;
+                background: #5a6378;
+                color: white;
+                border-radius: 50%;
+                text-decoration: none;
+                font-size: 1.5rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+                opacity: 0.7;
+                border: none;
+                cursor: pointer;
+            " onmouseover="this.style.background='#8faee8'; this.style.transform='scale(1.1)'; this.style.opacity='1';" 
+               onmouseout="this.style.background='#5a6378'; this.style.transform='scale(1)'; this.style.opacity='0.7';">
+                <i class="fas fa-cog"></i>
+            </button>
+            <div id="adminMenu" style="
+                position: absolute;
+                bottom: 70px;
+                right: 0;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                display: none;
+                flex-direction: column;
+                min-width: 200px;
+            ">
+                <a href="sermon-admin.html" style="
+                    padding: 1rem;
+                    border-bottom: 1px solid #f0f0f0;
+                    text-decoration: none;
+                    color: #5a6378;
+                    font-weight: 600;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='#f9f9f9'; this.style.color='#8faee8';" 
+                   onmouseout="this.style.background='white'; this.style.color='#5a6378';">
+                    <i class="fas fa-microphone"></i> Sermon Admin
+                </a>
+                <a href="magazine-admin.html" style="
+                    padding: 1rem;
+                    text-decoration: none;
+                    color: #5a6378;
+                    font-weight: 600;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='#f9f9f9'; this.style.color='#8faee8';" 
+                   onmouseout="this.style.background='white'; this.style.color='#5a6378';">
+                    <i class="fas fa-newspaper"></i> Magazine Admin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAdminMenu() {
+            const menu = document.getElementById('adminMenu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+        
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('adminMenu');
+            const btn = document.getElementById('adminMenuBtn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="./images/Rccg_logo.png" alt="RCCG Wisdom of Parish Logo" />
+                    <h3>RCCG Wisdom of Parish</h3>
+                </div>
+                <p>Building a community of faith, worship, and service in the love of Christ.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#sermons">Sermons</a></li>
+                    <li><a href="#ministries">Ministries</a></li>
+                    <li><a href="#upcoming">Events</a></li>
+                    <li><a href="giving.html">Give</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank" title="Facebook" class="social-icon">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </a>
+                    <a href="https://twitter.com" target="_blank" title="Twitter" class="social-icon">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href="https://instagram.com" target="_blank" title="Instagram" class="social-icon">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://youtube.com" target="_blank" title="YouTube" class="social-icon">
+                        <i class="fab fa-youtube"></i> YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Service Times</h4>
+                <ul class="footer-times">
+                    <li><strong>Sunday:</strong> 9:00 AM - 11:30 AM</li>
+                    <li><strong>Tuesday:</strong> 6:00 PM (Digging Deep)</li>
+                    <li><strong>Friday:</strong> 6:00 PM (Faith Clinic)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 RCCG Wisdom of Parish. All rights reserved.</p>
+            <p>Serving in Faith | Growing in Grace | Sharing God's Love</p>
+        </div>
+    </footer>
+
+    
+
+</body>
+</html>
+
+<!-- External JavaScript Files -->
+<script src="js/carousel.js"></script>
+<script src="js/giving.js"></script>
+<script src="js/global.js"></script>

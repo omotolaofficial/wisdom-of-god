@@ -1,0 +1,105 @@
+/**
+ * MINISTRIES PAGE STYLES
+ * ======================
+ * Styles for ministries.html page
+ * Includes: Ministry cards, grid layout
+ */
+
+/*---cards---*/
+.cards {
+    display: flex;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.card {
+    background-color: white;
+    padding: 1rem;
+    margin-top: -1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-align: center;
+    flex: 1;
+    transition: transform 0.3s ease;
+    background-color: lightgrey;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+/* Ministry section specific styles */
+.ministries .card {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    background-color: #fff;
+}
+
+.ministries .card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.ministries .card h3 {
+    font-size: 0.95rem;
+    padding: 0.75rem 0.75rem 0.9rem;
+    margin: 0;
+    background-color: white;
+    color: #333;
+    line-height: 1.2;
+    min-height: 2.4rem;
+    text-transform: capitalize;
+}
+
+/*---section headings--*/
+section h2 {
+    font-size: 2rem;
+    color: #5a6378;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.card h3 {
+    font-size: 1.8rem;
+    color:#333;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ministries .card img {
+        height: 180px;
+    }
+
+    .ministries .card h3 {
+        font-size: 0.88rem;
+        padding: 0.6rem;
+    }
+
+    .cards {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+}

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Session - Magazine</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/magazine.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Magazine Shared Styles */
+        .magazine-hero {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .magazine-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .magazine-hero p {
+            font-size: 1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Magazine Controls */
+        .magazine-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: white;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-magazine {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-magazine input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-magazine input:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        .filter-date select {
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-date select:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        /* Article Grid */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Article Card */
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-image i {
+            opacity: 0.8;
+        }
+
+        .article-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .article-date {
+            font-size: 0.85rem;
+            color: #8faee8;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .article-author {
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .article-card h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .article-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #8faee8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 0.8rem;
+            color: #5a6378;
+        }
+
+        /* Article Modal */
+        .article-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .article-modal.show {
+            display: flex;
+        }
+
+        .modal-article-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-article {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-article:hover {
+            color: #333;
+        }
+
+        .modal-article-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-article-header h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .modal-article-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .modal-meta-item i {
+            color: #8faee8;
+            font-size: 1.1rem;
+        }
+
+        .modal-article-body {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .modal-article-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Featured Article */
+        .featured-article {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 1000px;
+        }
+
+        .featured-article-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .featured-article-image {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 5rem;
+        }
+
+        .featured-article-content {
+            padding: 2rem;
+        }
+
+        .featured-label {
+            color: #8faee8;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .featured-article-content h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .featured-article-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .featured-article-content p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .magazine-hero h1 {
+                font-size: 2rem;
+            }
+
+            .article-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-article-wrapper {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-article-content {
+                padding: 1.5rem;
+            }
+
+            .featured-article-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .magazine-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-magazine,
+            .filter-date {
+                width: 100%;
+            }
+
+            .modal-article-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                     <li><a href="#">Ministries</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#giving">Give</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Magazine Hero -->
+    <section class="magazine-hero">
+        <h1><i class="fas fa-heart-pulse"></i> Health Session Magazine</h1>
+        <p>Inspiring articles on health, wellness, and living a balanced Christian life</p>
+    </section>
+
+    <!-- Featured Article -->
+    <section class="container">
+        <div class="featured-article">
+            <div class="featured-article-wrapper">
+                <div class="featured-article-image">
+                    <i class="fas fa-dumbbell"></i>
+                </div>
+                <div class="featured-article-content">
+                    <div class="featured-label">Featured This Month</div>
+                    <h2>The Body as a Temple</h2>
+                    <div class="featured-article-meta">
+                        <span class="modal-meta-item">
+                            <i class="fas fa-calendar"></i> March 15, 2025
+                        </span>
+                        <span class="modal-meta-item">
+                            <i class="fas fa-user"></i> Dr. Grace Obi
+                        </span>
+                    </div>
+                    <p>Understanding medical science alongside biblical wisdom. Learn how to maintain physical health as an important aspect of serving God.</p>
+                    <a href="#" class="read-more" onclick="openArticle(0)">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Magazine Controls -->
+    <div class="magazine-controls">
+        <div class="search-magazine">
+            <input type="text" id="searchArticles" placeholder="Search articles by title...">
+        </div>
+        <div class="filter-date">
+            <select id="filterMonth">
+                <option value="">All Articles</option>
+                <option value="2025-03">March 2025</option>
+                <option value="2025-02">February 2025</option>
+                <option value="2025-01">January 2025</option>
+                <option value="2024-12">December 2024</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Article Grid -->
+    <div class="article-grid" id="articleGrid"></div>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="article-modal">
+        <div class="modal-article-content">
+            <span class="close-article" onclick="closeArticle()">&times;</span>
+            <div class="modal-article-header">
+                <h2 id="modalTitle"></h2>
+                <div class="modal-article-meta">
+                    <span class="modal-meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span id="modalDate"></span>
+                    </span>
+                    <span class="modal-meta-item">
+                        <i class="fas fa-user"></i>
+                        <span id="modalAuthor"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-article-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: #5a6378; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <p>&copy; 2025 RCCG Wisdom of Parish. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample Articles Data - DEVELOPER: Add/Edit articles here with dates
+        const articlesData = [
+            {
+                id: 0,
+                title: "The Body as a Temple",
+                author: "Dr. Grace Obi",
+                date: "2025-03-15",
+                description: "Understanding how to maintain physical health as an important aspect of serving God.",
+                content: "The Bible teaches us that our bodies are temples of the Holy Spirit. The apostle Paul reminds us in 1 Corinthians 6:19-20 that we should glorify God in our bodies. This article explores how medical science and biblical wisdom work together.\n\nPhysical health is not just about appearance or comfort. It's about having the strength and vitality to serve God effectively. When we maintain our health through proper nutrition, exercise, and rest, we honor the gift God has given us.\n\nMany people struggle with health issues that could be prevented through simple lifestyle changes. Regular exercise, balanced diet, adequate sleep, and stress management are fundamental pillars of good health. These practices are supported by both scientific research and biblical principles.\n\nAs Christians, we are called to be good stewards of what God has entrusted to us. This includes our bodies. Let's commit to taking care of ourselves so we can serve God and our communities effectively.",
+                icon: "fas fa-dumbbell"
+            },
+            {
+                id: 1,
+                title: "Mental Wellness and Peace in Christ",
+                author: "Pastor James Obot",
+                date: "2025-03-08",
+                description: "Finding mental peace and emotional balance through faith and Christian practices.",
+                content: "Mental health is just as important as physical health. In today's world, stress, anxiety, and depression are increasingly common. As Christians, we have tools and resources that can help us maintain emotional wellness.\n\nJesus said in Matthew 11:28, 'Come to me, all you who are weary and burdened, and I will give you rest.' This promise of rest and peace is available to all believers.\n\nPractices like prayer, meditation on Scripture, fellowship with other believers, and seeking professional help when needed are all important parts of maintaining mental wellness. There's no shame in seeking help from a counselor or therapist.\n\nWhen anxiety and worry threaten to overwhelm us, we can turn to God's word. Philippians 4:6-7 encourages us to bring our concerns to God through prayer, and His peace will guard our hearts and minds.\n\nLet's prioritize our mental health and remember that seeking help is a sign of strength, not weakness.",
+                icon: "fas fa-brain"
+            },
+            {
+                id: 2,
+                title: "Nutrition and Spiritual Disciplines",
+                author: "Sister Chioma Adeyemi",
+                date: "2025-02-28",
+                description: "How proper nutrition connects to our physical and spiritual well-being.",
+                content: "What we eat affects not only our physical bodies but also our mental clarity and spiritual awareness. The Bible places great emphasis on disciplined living, and this includes how we treat our bodies through nutrition.\n\nProverbs 23:20-21 warns us against excess consumption of food and drink, emphasizing moderation. Similarly, 1 Timothy 4:3-4 teaches us about the goodness of food received with thanksgiving.\n\nProper nutrition provides the fuel our bodies need to function optimally. When we eat well, we have more energy, better focus, and improved mood. This allows us to be more effective in our spiritual practices and service to others.\n\nMany health issues today are preventable through proper diet. Eating whole foods, plenty of vegetables and fruits, reducing processed foods, and staying hydrated are foundational principles for good health.\n\nRember, your body is a gift from God. Let's honor Him by making wise nutritional choices and eating with gratitude and intentionality.",
+                icon: "fas fa-apple-alt"
+            },
+            {
+                id: 3,
+                title: "Sleep: A Necessity, Not Luxury",
+                author: "Dr. Adekunle Adeyemi",
+                date: "2025-02-15",
+                description: "Why quality sleep is essential for health and how to improve your sleep habits.",
+                content: "Sleep is not a luxury or weakness; it's a necessity. God Himself rested on the seventh day, setting an example for us. Genesis 2:2-3 shows us that rest is part of God's design for creation.\n\nQuality sleep is when your body repairs itself, your brain processes information, and you restore emotional equilibrium. Chronic sleep deprivation is linked to numerous health problems including heart disease, diabetes, depression, and decreased immunity.\n\nMost adults need 7-9 hours of sleep per night. To improve sleep quality, try to maintain a consistent sleep schedule, create a restful environment, avoid screens before bed, and practice relaxation techniques.\n\nMany of us sacrifice sleep thinking we're being more productive, but studies show that well-rested people are actually more productive and healthier overall. As Christians, we should view sleep as part of our stewardship of the body God gave us.\n\nIf you struggle with insomnia or sleep issues, don't hesitate to consult a sleep specialist. Taking care of your sleep is taking care of your health.",
+                icon: "fas fa-bed"
+            },
+            {
+                id: 4,
+                title: "Exercise and Christian Discipline",
+                author: "Coach Emmanuel Okafor",
+                date: "2025-02-01",
+                description: "Building a fitness routine that aligns with Christian values and discipline.",
+                content: "Physical exercise is mentioned in Scripture as a form of discipline. 1 Timothy 4:7-8 states, 'Rather, train yourself to be godly. For physical training is of some value, but godliness has value for all things.'\n\nWhile godliness is the ultimate goal, physical fitness supports it. A fit, healthy body gives us better mental clarity, improved mood, and more strength to serve others and pursue God's call on our lives.\n\nExercise doesn't have to be complicated or expensive. Walking, running, swimming, or playing sports can all provide excellent physical activity. The key is consistency and finding activities you enjoy.\n\nBeyond the physical benefits, exercise provides mental health benefits including stress relief, improved sleep, and enhanced mood through endorphin release.\n\nWhen you exercise, remember that you're caring for the body God gave you. This is an act of stewardship and worship. Find an exercise routine that fits your lifestyle and commit to it for your health and well-being.",
+                icon: "fas fa-person-running"
+            },
+            {
+                id: 5,
+                title: "Overcoming Unhealthy Eating Habits",
+                author: "Nutritionist Sarah Umoh",
+                date: "2025-01-20",
+                description: "Practical steps to break unhealthy eating patterns and establish better habits.",
+                content: "Many of us struggle with unhealthy eating habits. Whether it's emotional eating, binge eating, or consuming too much processed food, these patterns can damage our health and self-esteem.\n\nThe first step to change is acknowledging the problem. Rather than looking for quick fixes, we should seek lasting transformation through prayer, support, and lifestyle changes.\n\nSome practical steps include: identifying triggers for unhealthy eating, planning meals ahead, keeping healthy snacks available, practicing portion control, and seeking support from friends or professionals when needed.\n\nAs Christians, we can also tap into spiritual resources. Prayer and meditation can help us understand the emotions driving unhealthy choices. Finding healthy ways to cope with stress and emotions is key.\n\nRemember that change takes time. Be patient with yourself, celebrate small victories, and don't be discouraged by setbacks. With determination and God's grace, you can establish healthier eating habits that will benefit your physical and mental health.",
+                icon: "fas fa-utensils"
+            }
+        ];
+
+        // Render Articles
+        function renderArticles(articles) {
+            const grid = document.getElementById('articleGrid');
+            
+            if (articles.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="fas fa-inbox"></i><p>No articles found</p></div>';
+                return;
+            }
+
+            grid.innerHTML = articles.map((article, index) => `
+                <div class="article-card" data-date="${article.date}">
+                    <div class="article-image">
+                        <i class="${article.icon}"></i>
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${formatDate(article.date)}
+                            </span>
+                        </div>
+                        <h3>${article.title}</h3>
+                        <div class="article-author">
+                            <i class="fas fa-user-circle"></i>
+                            ${article.author}
+                        </div>
+                        <p class="article-description">${article.description}</p>
+                        <a href="#" class="read-more" onclick="openArticle(${article.id})">
+                            Read Full Article <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Format Date
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateStr).toLocaleDateString('en-US', options);
+        }
+
+        // Open Article Modal
+        function openArticle(id) {
+            const article = articlesData[id];
+            document.getElementById('modalTitle').textContent = article.title;
+            document.getElementById('modalDate').textContent = formatDate(article.date);
+            document.getElementById('modalAuthor').textContent = article.author;
+            document.getElementById('modalBody').innerHTML = article.content.split('\n').map(p => `<p>${p}</p>`).join('');
+            document.getElementById('articleModal').classList.add('show');
+        }
+
+        // Close Article Modal
+        function closeArticle() {
+            document.getElementById('articleModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('articleModal');
+            if (event.target == modal) {
+                closeArticle();
+            }
+        }
+
+        // Search Articles
+        document.getElementById('searchArticles').addEventListener('keyup', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const month = document.getElementById('filterMonth').value;
+            
+            let filtered = articlesData.filter(article => {
+                const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                                     article.author.toLowerCase().includes(searchTerm);
+                const matchesMonth = !month || article.date.startsWith(month);
+                return matchesSearch && matchesMonth;
+            });
+            
+            renderArticles(filtered);
+        });
+
+        // Filter by Date
+        document.getElementById('filterMonth').addEventListener('change', function(e) {
+            const month = e.target.value;
+            const searchTerm = document.getElementById('searchArticles').value.toLowerCase();
+            
+            let filtered = articlesData.filter(article => {
+                const matchesMonth = !month || article.date.startsWith(month);
+                const matchesSearch = article.title.toLowerCase().includes(searchTerm) || 
+                                     article.author.toLowerCase().includes(searchTerm);
+                return matchesMonth && matchesSearch;
+            });
+            
+            renderArticles(filtered);
+        });
+
+        // Initialize - render all articles from magazine manager
+        const articles = magazineManager.getArticles('health-session');
+        renderArticles(articles);
+    </script>
+
+    <!-- Admin Link -->
+    <a href="magazine-admin.html" class="admin-link" title="Manage Articles">
+        <i class="fas fa-cog"></i>
+    </a>
+
+    <style>
+        .admin-link {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #5a6378;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .admin-link:hover {
+            background: #8faee8;
+            transform: scale(1.1);
+        }
+        @media (max-width: 768px) {
+            .admin-link {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+
+    <!-- External JavaScript Files -->
+    <script src="js/magazine-admin.js"></script>
+    <script src="js/global.js"></script>
+</body>
+</html>

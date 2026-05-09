@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Giving - RCCG Wisdom of Parish</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/giving.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Giving Page Specific Styles */
+        .giving-hero {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            padding: 6rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .giving-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .giving-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Why Give Section */
+        .why-give-section {
+            padding: 3rem 2rem;
+            background: #f9f9f9;
+            margin-bottom: 3rem;
+        }
+
+        .why-give-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .why-give-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .why-give-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .why-give-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .why-give-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .why-give-card i {
+            font-size: 2.5rem;
+            color: #8faee8;
+            margin-bottom: 1rem;
+        }
+
+        .why-give-card h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .why-give-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Giving Form Section */
+        .giving-form-section {
+            padding: 3rem 2rem;
+            background: white;
+            margin-bottom: 3rem;
+        }
+
+        .giving-form-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .giving-form-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .giving-form-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .giving-info-box {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+        }
+
+        .giving-info-box h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .giving-reasons-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .giving-reasons-list li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .giving-reasons-list li:last-child {
+            border-bottom: none;
+        }
+
+        .giving-reasons-list li:before {
+            content: "\f058";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: #fff;
+        }
+
+        .giving-form-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid #f0f0f0;
+        }
+
+        .giving-form-box h3 {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #8faee8;
+            box-shadow: 0 0 0 3px rgba(143, 174, 232, 0.1);
+        }
+
+        .amount-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .amount-btn {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            background: white;
+            color: #333;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .amount-btn:hover {
+            border-color: #8faee8;
+            background: #f9f9f9;
+        }
+
+        .amount-btn.active {
+            background: #8faee8;
+            color: white;
+            border-color: #8faee8;
+        }
+
+        .give-submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+
+        .give-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(90, 99, 120, 0.3);
+        }
+
+        /* Impact Section */
+        .impact-section {
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .impact-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .impact-section h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .impact-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .impact-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .impact-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .impact-description {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Ways to Give Section */
+        .ways-to-give {
+            padding: 3rem 2rem;
+            background: #f9f9f9;
+            margin-bottom: 3rem;
+        }
+
+        .ways-to-give-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .ways-to-give h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .ways-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .way-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .way-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .way-card i {
+            font-size: 2.5rem;
+            color: #8faee8;
+            margin-bottom: 1rem;
+        }
+
+        .way-card h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .way-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .way-card .detail {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 3rem 2rem;
+            background: white;
+            margin-bottom: 3rem;
+        }
+
+        .faq-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 3rem;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #e8e8e8;
+        }
+
+        .faq-question i {
+            color: #8faee8;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 1.5rem;
+            background: white;
+            color: #666;
+            line-height: 1.8;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* Security Badge */
+        .security-info {
+            text-align: center;
+            padding: 2rem;
+            background: #f0f7ff;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .security-info i {
+            font-size: 2rem;
+            color: #8faee8;
+            margin-bottom: 0.5rem;
+        }
+
+        .security-info p {
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .giving-hero h1 {
+                font-size: 2rem;
+            }
+
+            .giving-form-content,
+            .giving-content {
+                grid-template-columns: 1fr;
+            }
+
+            .amount-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .ways-grid,
+            .why-give-grid,
+            .impact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .impact-amount {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--Navigation-->
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="Wisdom of God Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermon</a></li>
+                    <li><a href="ministries.html">Ministries</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="giving.html">Give</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Magazine</a>
+                        <ul class="dropdown-content">
+                            <li><a href="health-session.html">Health Session</a></li>
+                            <li><a href="youth-corner.html">Youth Corner</a></li>
+                            <li><a href="inspiration.html">Inspiration</a></li>
+                            <li><a href="spirituality.html">Spirituality</a></li>
+                        </ul>
+                    </li>               
+                
+            </ul>
+                <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Giving Hero -->
+    <section class="giving-hero">
+        <h1><i class="fas fa-hand-holding-heart"></i> Support Our Ministry</h1>
+        <p>Your generous giving enables us to spread the gospel, support our community, and impact lives for Christ</p>
+    </section>
+
+    <!-- Why Give Section -->
+    <section class="why-give-section">
+        <div class="why-give-content">
+            <h2>Why Give to RCCG Wisdom of Parish?</h2>
+            <div class="why-give-grid">
+                <div class="why-give-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Spread the Gospel</h3>
+                    <p>Your giving helps us reach more people with the message of Jesus Christ through worship, outreach, and discipleship.</p>
+                </div>
+                <div class="why-give-card">
+                    <i class="fas fa-hands-helping"></i>
+                    <h3>Community Support</h3>
+                    <p>We invest in our community through benevolence programs, community outreach, and support for those in need.</p>
+                </div>
+                <div class="why-give-card">
+                    <i class="fas fa-church"></i>
+                    <h3>Ministry Programs</h3>
+                    <p>Your gifts fuel our vibrant ministry programs for children, youth, families, and adults of all ages.</p>
+                </div>
+                <div class="why-give-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Care & Support</h3>
+                    <p>We provide pastoral care, counseling, and spiritual support to our congregation during life's challenges.</p>
+                </div>
+                <div class="why-give-card">
+                    <i class="fas fa-globe"></i>
+                    <h3>Missions Work</h3>
+                    <p>Your contribution supports missionary work and evangelism efforts both locally and internationally.</p>
+                </div>
+                <div class="why-give-card">
+                    <i class="fas fa-building"></i>
+                    <h3>Infrastructure</h3>
+                    <p>We maintain and improve our facilities to create welcoming spaces for worship, fellowship, and service.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Giving Form Section -->
+    <section class="giving-form-section">
+        <div class="giving-form-wrapper">
+            <h2>Make Your Donation</h2>
+            
+            <div class="security-info">
+                <i class="fas fa-lock"></i>
+                <p>Your donation is secure and 100% confidential</p>
+            </div>
+
+            <div class="giving-form-content">
+                <!-- Left Side - Info -->
+                <div class="giving-info-box">
+                    <h3><i class="fas fa-info-circle"></i> Your Impact Matters</h3>
+                    <ul class="giving-reasons-list">
+                        <li>Every gift, no matter the size, makes a difference</li>
+                        <li>Your contribution supports God's work in our community</li>
+                        <li>100% of your giving directly supports ministry</li>
+                        <li>Receive a tax-deductible receipt for your records</li>
+                        <li>Join thousands of faithful givers</li>
+                        <li>Secure online platform for your protection</li>
+                    </ul>
+                </div>
+
+                <!-- Right Side - Form -->
+                <div class="giving-form-box">
+                    <h3>Donation Details</h3>
+                    <form class="giving-form" id="givingForm">
+                        <div class="form-group">
+                            <label for="purpose">What would you like to support?</label>
+                            <select id="purpose" name="purpose" required>
+                                <option value="">-- Select Purpose --</option>
+                                <option value="general">General Offering</option>
+                                <option value="ministry">Ministry Programs</option>
+                                <option value="missions">Missions & Outreach</option>
+                                <option value="building">Building Fund</option>
+                                <option value="benevolence">Benevolence/Charitable Help</option>
+                                <option value="youth">Youth Ministry</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Select Amount</label>
+                            <div class="amount-buttons">
+                                <button type="button" class="amount-btn" data-amount="5000" onclick="selectAmount(5000)">₦5,000</button>
+                                <button type="button" class="amount-btn" data-amount="10000" onclick="selectAmount(10000)">₦10,000</button>
+                                <button type="button" class="amount-btn" data-amount="25000" onclick="selectAmount(25000)">₦25,000</button>
+                                <button type="button" class="amount-btn" data-amount="50000" onclick="selectAmount(50000)">₦50,000</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customAmount">Or Enter Custom Amount (₦)</label>
+                            <input type="number" id="customAmount" name="customAmount" placeholder="Enter amount" min="100" step="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="donorName">Your Name (Optional)</label>
+                            <input type="text" id="donorName" name="donorName" placeholder="Your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="donorEmail">Your Email (Optional)</label>
+                            <input type="email" id="donorEmail" name="donorEmail" placeholder="your.email@example.com">
+                        </div>
+
+                        <button type="submit" class="give-submit-btn">
+                            <i class="fas fa-heart"></i> Proceed to Donation
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact-section">
+        <div class="impact-content">
+            <h2>Your Gift Makes an Impact</h2>
+            <p style="font-size: 1.05rem; margin-bottom: 2rem;">See how your donation can directly support our ministry</p>
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <i class="fas fa-child"></i>
+                    <div class="impact-amount">₦2,000</div>
+                    <div class="impact-description">Supplies for Sunday School</div>
+                </div>
+                <div class="impact-card">
+                    <i class="fas fa-book"></i>
+                    <div class="impact-amount">₦5,000</div>
+                    <div class="impact-description">Youth Mentorship Program</div>
+                </div>
+                <div class="impact-card">
+                    <i class="fas fa-hands-helping"></i>
+                    <div class="impact-amount">₦10,000</div>
+                    <div class="impact-description">Community Outreach Event</div>
+                </div>
+                <div class="impact-card">
+                    <i class="fas fa-music"></i>
+                    <div class="impact-amount">₦15,000</div>
+                    <div class="impact-description">Worship Choir Development</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ways to Give Section -->
+    <section class="ways-to-give">
+        <div class="ways-to-give-content">
+            <h2>Other Ways to Give</h2>
+            <div class="ways-grid">
+                <div class="way-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile Transfer</h3>
+                    <p>Transfer directly via your bank mobile app</p>
+                    <div class="detail">
+                        <strong>Church Account:</strong><br>
+                        Account Number: [Add your account number]<br>
+                        Bank: [Add your bank name]
+                    </div>
+                </div>
+                <div class="way-card">
+                    <i class="fas fa-credit-card"></i>
+                    <h3>Card Payment</h3>
+                    <p>Pay securely using your debit or credit card</p>
+                    <div class="detail">
+                        Available through our online platform with encrypted security
+                    </div>
+                </div>
+                <div class="way-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>In-Person Giving</h3>
+                    <p>Give directly during our worship services</p>
+                    <div class="detail">
+                        Cash or check during collection<br>Contact: deacon@church.com
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-content">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is my donation tax-deductible?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes! RCCG Wisdom of Parish is a registered non-profit organization. You'll receive a tax-deductible receipt for every donation made. Keep your receipt for tax purposes.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is my personal information secure?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Absolutely. We use industry-standard encryption and security protocols to protect your personal and financial information. Your privacy is our top priority.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can I set up recurring giving?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes! You can set up monthly, quarterly, or annual recurring donations. This helps us plan ministry programs and makes giving convenient for you.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What if I want to give anonymously?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    You can leave the name and email fields blank during checkout. Your donation will be recorded, but you'll remain anonymous in our records.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can I donate on behalf of someone?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes! You can make a donation for a family member, friend, or in honor of someone. Simply include their name in the "Your Name" field or add a note describing the gift.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How are my donations used?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Your donations support our ministry programs, community outreach, staff, facility maintenance, worship materials, and mission work. We maintain transparency in how we use funds and are happy to share detailed reports upon request.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="./images/Rccg_logo.png" alt="RCCG Wisdom of Parish Logo" />
+                    <h3>RCCG Wisdom of Parish</h3>
+                </div>
+                <p>Building a community of faith, worship, and service in the love of Christ.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="sermons.html">Sermons</a></li>
+                    <li><a href="ministries.html">Ministries</a></li>
+                    <li><a href="giving.html">Giving</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank" title="Facebook" class="social-icon">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </a>
+                    <a href="https://twitter.com" target="_blank" title="Twitter" class="social-icon">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href="https://instagram.com" target="_blank" title="Instagram" class="social-icon">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://youtube.com" target="_blank" title="YouTube" class="social-icon">
+                        <i class="fab fa-youtube"></i> YouTube
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Service Times</h4>
+                <ul class="footer-times">
+                    <li><strong>Sunday:</strong> 9:00 AM - 11:30 AM</li>
+                    <li><strong>Tuesday:</strong> 6:00 PM (Digging Deep)</li>
+                    <li><strong>Friday:</strong> 6:00 PM (Faith Clinic)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 RCCG Wisdom of Parish. All rights reserved.</p>
+            <p>Serving in Faith | Growing in Grace | Sharing God's Love</p>
+        </div>
+    </footer>
+
+    <script>
+        // Amount Selection
+        function selectAmount(amount) {
+            document.getElementById('customAmount').value = '';
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Custom Amount Clear preset buttons
+        document.getElementById('customAmount').addEventListener('input', function() {
+            if (this.value) {
+                document.querySelectorAll('.amount-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            }
+        });
+
+        // Form Submission
+        document.getElementById('givingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const amount = document.getElementById('customAmount').value || 
+                          document.querySelector('.amount-btn.active')?.dataset.amount;
+            
+            if (!amount) {
+                alert('Please select or enter an amount');
+                return;
+            }
+            
+            const purpose = document.getElementById('purpose').value;
+            const name = document.getElementById('donorName').value;
+            const email = document.getElementById('donorEmail').value;
+            
+            // Here you would integrate with your payment gateway
+            console.log({
+                amount: amount,
+                purpose: purpose,
+                name: name,
+                email: email
+            });
+            
+            alert('Thank you for your generous gift! Processing your donation...');
+        });
+
+        // FAQ Toggle
+        function toggleFaq(element) {
+            const parent = element.parentElement;
+            parent.classList.toggle('active');
+        }
+
+        // Initialize dropdown and mobile menu
+    </script>
+
+    <!-- External JavaScript Files -->
+    <script src="js/global.js"></script>
+</body>
+</html>

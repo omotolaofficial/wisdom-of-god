@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sermons - RCCG Wisdom of Parish</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/sermons.css">
+    <link rel="stylesheet" href="css/responsiveness.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Sermon Page Specific Styles */
+        .sermon-hero {
+            background: linear-gradient(135deg, #5a6378 0%, #8faee8 100%);
+            padding: 6rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .sermon-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .sermon-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Admin Link */
+        .admin-link {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #5a6378;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .admin-link:hover {
+            background: #8faee8;
+            transform: scale(1.1);
+        }
+
+        .admin-link-tooltip {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: white;
+            color: #5a6378;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            white-space: nowrap;
+            font-size: 0.85rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-link:hover .admin-link-tooltip {
+            opacity: 1;
+        }
+
+        /* Filter Section */
+        .sermon-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            padding: 0 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid #8faee8;
+            background: white;
+            color: #5a6378;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #8faee8;
+            color: white;
+            box-shadow: 0 4px 12px rgba(143, 174, 232, 0.4);
+        }
+
+        /* Sermon Grid */
+        .sermon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Sermon Card */
+        .sermon-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .sermon-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .sermon-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sermon-thumbnail i {
+            opacity: 0.8;
+        }
+
+        .sermon-thumbnail::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .sermon-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sermon-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .sermon-date {
+            font-size: 0.85rem;
+            color: #8faee8;
+            font-weight: 600;
+        }
+
+        .sermon-category {
+            display: inline-block;
+            background: #f0f5ff;
+            color: #5a6378;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sermon-card h3 {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .sermon-speaker {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sermon-speaker i {
+            color: #8faee8;
+        }
+
+        .sermon-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0.8rem 0;
+            flex-grow: 1;
+        }
+
+        /* Media Controls */
+        .sermon-media {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .media-control {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .media-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f0f5ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5a6378;
+            font-size: 0.9rem;
+            min-width: 35px;
+        }
+
+        .audio-player {
+            flex-grow: 1;
+            height: 35px;
+        }
+
+        .audio-player audio {
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .media-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .media-btn {
+            padding: 0.6rem 1rem;
+            background: #8faee8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .media-btn:hover {
+            background: #5a6378;
+            transform: scale(1.02);
+        }
+
+        .media-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Featured Sermon */
+        .featured-sermon {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 900px;
+        }
+
+        .featured-sermon-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .featured-video {
+            width: 100%;
+            height: 100%;
+            min-height: 350px;
+            background: linear-gradient(135deg, #8faee8 0%, #5a6378 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            position: relative;
+        }
+
+        .featured-video iframe,
+        .featured-video video {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .featured-content {
+            padding: 2rem;
+        }
+
+        .featured-label {
+            color: #8faee8;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-content h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .featured-content p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .sermon-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f5ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5a6378;
+            font-size: 1rem;
+        }
+
+        .stat-text h4 {
+            font-size: 0.85rem;
+            color: #999;
+            margin: 0;
+        }
+
+        .stat-text p {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Search & Sort */
+        .sermon-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: white;
+            margin: 1rem;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-sermon {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-sermon input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-sermon input:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        .sort-sermon select {
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .sort-sermon select:focus {
+            outline: none;
+            border-color: #8faee8;
+        }
+
+        /* Video Modal */
+        .video-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .video-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+            z-index: 10;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .modal-video,
+        .modal-audio {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .modal-audio {
+            aspect-ratio: auto;
+            height: 50px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sermon-hero h1 {
+                font-size: 2rem;
+            }
+
+            .sermon-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-sermon-wrapper {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-content {
+                padding: 1.5rem;
+            }
+
+            .featured-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .sermon-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-sermon,
+            .sort-sermon {
+                width: 100%;
+            }
+
+            .sermon-filters {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .media-buttons {
+                flex-direction: column;
+            }
+
+            .media-btn {
+                min-width: auto;
+            }
+
+            .admin-link {
+                bottom: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <nav class="navbar1">
+            <div class="logo"><img src="./images/Rccg_logo.png" alt="RCCG Wisdom Logo"><strong>RCCG WISDOM OF PARISH</strong></div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="sermons.html" class="active">Sermon</a></li>
+                <li><a href="#ministries">Ministries</a></li>
+                <li><a href="#upcoming">Events</a></li>
+                <li><a href="#giving">Give</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">Magazine</a>
+                    <ul class="dropdown-content">
+                        <li><a href="health-session.html">Health Session</a></li>
+                        <li><a href="youth-corner.html">Youth Corner</a></li>
+                        <li><a href="inspiration.html">Inspiration</a></li>
+                        <li><a href="spirituality.html">Spirituality</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sermon Hero Section -->
+    <section class="sermon-hero">
+        <h1><i class="fas fa-microphone"></i> Our Sermons</h1>
+        <p>Listen to inspiring messages and grow in your spiritual journey</p>
+    </section>
+
+    <!-- Featured Sermon Section -->
+    <section class="container">
+        <div class="featured-sermon" id="featuredSermon">
+            <!-- Dynamically populated -->
+        </div>
+    </section>
+
+    <!-- Search and Sort Controls -->
+    <div class="sermon-controls">
+        <div class="search-sermon">
+            <input type="text" id="sermonsSearch" placeholder="Search sermons by title or speaker...">
+        </div>
+        <div class="sort-sermon">
+            <select id="sortOption">
+                <option value="latest">Latest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="a-z">A - Z</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="sermon-filters">
+        <button class="filter-btn active" onclick="filterSermons('all')">All Sermons</button>
+        <button class="filter-btn" onclick="filterSermons('faith')">Faith</button>
+        <button class="filter-btn" onclick="filterSermons('prayer')">Prayer</button>
+        <button class="filter-btn" onclick="filterSermons('worship')">Worship</button>
+        <button class="filter-btn" onclick="filterSermons('growth')">Spiritual Growth</button>
+        <button class="filter-btn" onclick="filterSermons('family')">Family</button>
+    </div>
+
+    <!-- Sermon Grid -->
+    <div class="sermon-grid" id="sermonGrid">
+        <!-- Dynamically populated -->
+    </div>
+
+    <!-- Video/Audio Modal -->
+    <div id="mediaModal" class="video-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeMediaModal()">&times;</span>
+            <h2 id="modalTitle">Media Player</h2>
+            <video id="videoPlayer" class="modal-video" style="display:none;" controls>
+                Your browser does not support the video tag.
+            </video>
+            <audio id="audioPlayer" class="modal-audio" style="display:none;" controls>
+                Your browser does not support the audio tag.
+            </audio>
+            <iframe id="iframePlayer" style="display:none; width:100%; height:500px; border:none;" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Admin Link (Hidden by default) -->
+    <a href="sermon-admin.html" class="admin-link" id="adminLink" style="display:none;">
+        <i class="fas fa-cog"></i>
+        <div class="admin-link-tooltip">Admin Panel</div>
+    </a>
+
+    <!-- Footer -->
+    <footer style="background: #5a6378; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <p>&copy; 2025 RCCG Wisdom of Parish. All rights reserved.</p>
+        <p style="font-size: 0.9rem; margin-top: 1rem;">Join us Sundays at 9:00 AM | Contact: (234) 123-4567</p>
+    </footer>
+
+    <!-- Load Sermon Manager -->
+    <script src="js/sermon-admin.js"></script>
+
+    <script>
+        let allSermons = [];
+        let currentFilter = 'all';
+        let currentSearchTerm = '';
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSermons();
+            setupEventListeners();
+            showAdminLinkIfLoggedIn();
+        });
+
+        // Load sermons from manager
+        function loadSermons() {
+            allSermons = sermonManager.getAllSermons();
+            renderFeaturedSermon();
+            renderSermonGrid(allSermons);
+        }
+
+        // Render featured sermon
+        function renderFeaturedSermon() {
+            if (allSermons.length === 0) return;
+
+            const featured = allSermons[0]; // First sermon is featured
+            const featuredSection = document.getElementById('featuredSermon');
+            
+            let mediaHTML = '';
+            
+            if (featured.videoFile) {
+                mediaHTML += `
+                    <div class="featured-video">
+                        <video controls style="width:100%; height:100%; border-radius:8px;">
+                            <source src="${featured.videoFile}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                `;
+            } else if (featured.youtubeLink) {
+                mediaHTML += `
+                    <div class="featured-video">
+                        <iframe src="${featured.youtubeLink}" allowfullscreen></iframe>
+                    </div>
+                `;
+            } else {
+                mediaHTML += `
+                    <div class="featured-video">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                `;
+            }
+
+            const featuredHTML = `
+                <div class="featured-sermon-wrapper">
+                    ${mediaHTML}
+                    <div class="featured-content">
+                        <div class="featured-label">Featured This Week</div>
+                        <h2>${featured.title}</h2>
+                        <p>${featured.description}</p>
+                        
+                        <div class="sermon-stats">
+                            <div class="stat-item">
+                                <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                                <div class="stat-text">
+                                    <h4>Date</h4>
+                                    <p>${formatDate(featured.date)}</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon"><i class="${featured.icon}"></i></div>
+                                <div class="stat-text">
+                                    <h4>Speaker</h4>
+                                    <p>${featured.author}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sermon-media">
+                            ${featured.audioFile ? `
+                                <div class="media-control">
+                                    <div class="media-icon"><i class="fas fa-headphones"></i></div>
+                                    <div class="audio-player">
+                                        <audio controls>
+                                            <source src="${featured.audioFile}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            <div class="media-buttons">
+                                ${featured.videoFile ? `<button class="media-btn" onclick="playMedia('video', '${featured.videoFile}', '${featured.title}')"><i class="fas fa-video"></i> Watch Video</button>` : ''}
+                                ${featured.youtubeLink ? `<button class="media-btn" onclick="playMedia('youtube', '${featured.youtubeLink}', '${featured.title}')"><i class="fas fa-youtube"></i> YouTube</button>` : ''}
+                                ${featured.audioFile ? `<button class="media-btn" onclick="playMedia('audio', '${featured.audioFile}', '${featured.title}')"><i class="fas fa-volume-up"></i> Listen</button>` : ''}
+                                <button class="media-btn" onclick="downloadSermon('${featured.title}')"><i class="fas fa-download"></i> Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            featuredSection.innerHTML = featuredHTML;
+        }
+
+        // Render sermon grid
+        function renderSermonGrid(sermons) {
+            const grid = document.getElementById('sermonGrid');
+            
+            if (sermons.length === 0) {
+                grid.innerHTML = '<p style="text-align:center; color:#999; grid-column:1/-1; padding:2rem;">No sermons found. Check back soon!</p>';
+                return;
+            }
+
+            grid.innerHTML = sermons.map(sermon => `
+                <div class="sermon-card" data-category="${sermon.category}" data-title="${sermon.title.toLowerCase()}" data-speaker="${sermon.author.toLowerCase()}">
+                    <div class="sermon-thumbnail">
+                        <i class="${sermon.icon}"></i>
+                    </div>
+                    <div class="sermon-content">
+                        <div class="sermon-meta">
+                            <span class="sermon-date">${formatDate(sermon.date)}</span>
+                            <span class="sermon-category">${capitalizeCategory(sermon.category)}</span>
+                        </div>
+                        <h3>${sermon.title}</h3>
+                        <div class="sermon-speaker">
+                            <i class="fas fa-user-circle"></i>
+                            ${sermon.author}
+                        </div>
+                        <p class="sermon-description">${sermon.description}</p>
+                        <div class="sermon-media">
+                            ${sermon.audioFile ? `
+                                <div class="media-control">
+                                    <div class="media-icon"><i class="fas fa-headphones"></i></div>
+                                    <div class="audio-player">
+                                        <audio controls>
+                                            <source src="${sermon.audioFile}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            <div class="media-buttons">
+                                ${sermon.videoFile ? `<button class="media-btn" onclick="playMedia('video', '${sermon.videoFile}', '${sermon.title}')"><i class="fas fa-video"></i> Video</button>` : ''}
+                                ${sermon.youtubeLink ? `<button class="media-btn" onclick="playMedia('youtube', '${sermon.youtubeLink}', '${sermon.title}')"><i class="fas fa-youtube"></i> YouTube</button>` : ''}
+                                ${sermon.audioFile ? `<button class="media-btn" onclick="playMedia('audio', '${sermon.audioFile}', '${sermon.title}')"><i class="fas fa-volume-up"></i> Listen</button>` : ''}
+                                <button class="media-btn" onclick="downloadSermon('${sermon.title}', '${sermon.content}')"><i class="fas fa-download"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Play media (video, audio, or youtube)
+        function playMedia(type, source, title) {
+            const modal = document.getElementById('mediaModal');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const iframePlayer = document.getElementById('iframePlayer');
+            const modalTitle = document.getElementById('modalTitle');
+
+            // Hide all players
+            videoPlayer.style.display = 'none';
+            audioPlayer.style.display = 'none';
+            iframePlayer.style.display = 'none';
+
+            modalTitle.textContent = title;
+
+            if (type === 'video') {
+                videoPlayer.src = source;
+                videoPlayer.style.display = 'block';
+            } else if (type === 'audio') {
+                audioPlayer.src = source;
+                audioPlayer.style.display = 'block';
+            } else if (type === 'youtube') {
+                iframePlayer.src = source;
+                iframePlayer.style.display = 'block';
+            }
+
+            modal.classList.add('show');
+        }
+
+        // Close media modal
+        function closeMediaModal() {
+            const modal = document.getElementById('mediaModal');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const iframePlayer = document.getElementById('iframePlayer');
+
+            videoPlayer.pause();
+            audioPlayer.pause();
+            videoPlayer.src = '';
+            audioPlayer.src = '';
+            iframePlayer.src = '';
+
+            modal.classList.remove('show');
+        }
+
+        // Download sermon as text file
+        function downloadSermon(title, content = '') {
+            const sermon = allSermons.find(s => s.title === title);
+            if (!sermon) return;
+
+            let downloadContent = `SERMON: ${sermon.title}\n`;
+            downloadContent += `Speaker: ${sermon.author}\n`;
+            downloadContent += `Date: ${formatDate(sermon.date)}\n`;
+            downloadContent += `Category: ${capitalizeCategory(sermon.category)}\n`;
+            downloadContent += `\n${'='.repeat(60)}\n\n`;
+            downloadContent += sermon.content;
+
+            const blob = new Blob([downloadContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${sermon.title.replace(/\s+/g, '-')}.txt`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Filter sermons
+        function filterSermons(category) {
+            currentFilter = category;
+            updateDisplay();
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search
+            document.getElementById('sermonsSearch').addEventListener('keyup', function(e) {
+                currentSearchTerm = e.target.value.toLowerCase();
+                updateDisplay();
+            });
+
+            // Sort
+            document.getElementById('sortOption').addEventListener('change', function(e) {
+                updateDisplay();
+            });
+
+            // Close modal on outside click
+            document.getElementById('mediaModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeMediaModal();
+                }
+            });
+
+            // Mobile menu
+            document.querySelector('.hamburger').addEventListener('click', function() {
+                this.classList.toggle('active');
+                document.querySelector('.navbar1 ul').classList.toggle('active');
+            });
+
+            // Dropdown
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.querySelector('.dropdown-content').classList.toggle('show');
+                });
+            });
+        }
+
+        // Update display based on filters and search
+        function updateDisplay() {
+            let filtered = allSermons;
+
+            // Filter by category
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(s => s.category === currentFilter);
+            }
+
+            // Filter by search term
+            if (currentSearchTerm) {
+                filtered = filtered.filter(s => 
+                    s.title.toLowerCase().includes(currentSearchTerm) ||
+                    s.author.toLowerCase().includes(currentSearchTerm)
+                );
+            }
+
+            // Sort
+            const sortOption = document.getElementById('sortOption').value;
+            if (sortOption === 'latest') {
+                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (sortOption === 'oldest') {
+                filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } else if (sortOption === 'a-z') {
+                filtered.sort((a, b) => a.title.localeCompare(b.title));
+            }
+
+            renderSermonGrid(filtered);
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', options);
+        }
+
+        // Capitalize category
+        function capitalizeCategory(cat) {
+            const categories = {
+                'faith': 'Faith',
+                'prayer': 'Prayer',
+                'worship': 'Worship',
+                'growth': 'Spiritual Growth',
+                'family': 'Family'
+            };
+            return categories[cat] || cat;
+        }
+
+        // Show admin link if logged in (simple check)
+        function showAdminLinkIfLoggedIn() {
+            // This is a simple demo. In production, you'd check for actual login/authentication
+            const adminLink = document.getElementById('adminLink');
+            // Uncomment the line below to always show the admin link
+            // adminLink.style.display = 'flex';
+        }
+    </script>
+
+    <!-- External Scripts -->
+    <script src="js/global.js"></script>
+
+</body>
+</html>
